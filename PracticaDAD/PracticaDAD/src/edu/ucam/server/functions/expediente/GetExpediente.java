@@ -14,15 +14,15 @@ public class GetExpediente implements Comando{
 	//Atributes
 	
 	//Methods
-	public static void run(String id, ArrayList<Expediente> listaExpediente, PrintWriter pw, int cont, int port, String address) 
+	public static void run(String idExpediente, ArrayList<Expediente> expedientes, PrintWriter pw, int cont, int port, String address) 
 	{
 		
 		
 		try 
 		{
 
-			for (Expediente expediente : listaExpediente) {
-				if(expediente.getId().equals(Singleton.getExpediente(id, listaExpediente).getId()))
+			for (Expediente expediente : expedientes) {
+				if(expediente.getId().equals(Singleton.getExpediente(idExpediente, expedientes).getId()))
 				{
 					pw.println("\n >EXPEDIENTE \n   +ID: " + expediente.getId());
 					pw.println("   +Observaciones: " + expediente.getObservaciones());
