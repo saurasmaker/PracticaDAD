@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JEditorPane;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ClientFrame extends JFrame {
 
@@ -36,7 +38,15 @@ public class ClientFrame extends JFrame {
 	private ClientThreadCommands clientThreadCommands;
 	
 	//Constructor
-	public ClientFrame(PrintWriter pw) {
+	public ClientFrame(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				pw.println("EXIT");
+				pw.flush();
+				clientThreadCommands.setSuspended(true);
+			}
+		});
 		this.setClientThreadCommands(clientThreadCommands);
 		this.setPw(pw);
 		

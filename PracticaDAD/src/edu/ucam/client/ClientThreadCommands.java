@@ -99,7 +99,7 @@ public class ClientThreadCommands extends Thread{
 	}
 	
 	public void openClientFrame() {
-		ClientFrame frame = new ClientFrame(pw);
+		ClientFrame frame = new ClientFrame(pw, this);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

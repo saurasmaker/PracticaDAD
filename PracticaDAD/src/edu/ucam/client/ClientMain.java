@@ -7,7 +7,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import edu.ucam.client.frames.ClientFrame;
 import edu.ucam.client.frames.ClientLogin;
 
 public class ClientMain{
