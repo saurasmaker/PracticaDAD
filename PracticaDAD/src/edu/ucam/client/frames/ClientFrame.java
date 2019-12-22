@@ -3,6 +3,9 @@ package edu.ucam.client.frames;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import edu.ucam.client.ClientThreadCommands;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.io.PrintWriter;
@@ -13,11 +16,12 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JDesktopPane;
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JScrollPane;
+import javax.swing.JEditorPane;
+import javax.swing.ScrollPaneConstants;
 
 public class ClientFrame extends JFrame {
 
@@ -29,11 +33,13 @@ public class ClientFrame extends JFrame {
 	//Atributes
 	private JPanel contentPane;
 	private PrintWriter pw;
-	
+	private ClientThreadCommands clientThreadCommands;
 	
 	//Constructor
 	public ClientFrame(PrintWriter pw) {
+		this.setClientThreadCommands(clientThreadCommands);
 		this.setPw(pw);
+		
 		setTitle("Client");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 779, 515);
@@ -43,9 +49,6 @@ public class ClientFrame extends JFrame {
 		
 		JDesktopPane desktopPane = new JDesktopPane();
 		desktopPane.setBackground(Color.GRAY);
-		
-		JMenu mnAutenticarse = new JMenu("Autenticarse");
-		menuBar.add(mnAutenticarse);
 		
 		JMenu mnPacientes = new JMenu("Pacientes");
 		menuBar.add(mnPacientes);
@@ -66,6 +69,11 @@ public class ClientFrame extends JFrame {
 		mnPacientes.add(mntmAnadirPaciente);
 		
 		JMenuItem mntmActualizarPaciente = new JMenuItem("Actualizar");
+		mntmActualizarPaciente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a actualizar: ");
+			}
+		});
 		mnPacientes.add(mntmActualizarPaciente);
 		
 		JMenuItem mntmMostrarPaciente = new JMenuItem("Mostrar");
@@ -84,6 +92,18 @@ public class ClientFrame extends JFrame {
 		menuBar.add(mnMedicos);
 		
 		JMenuItem mntmAnadirMedico = new JMenuItem("A\u00F1adir");
+		mntmAnadirMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AnadirMedico anadirMedico = new AnadirMedico(); 
+				desktopPane.add(anadirMedico);
+				try {
+					anadirMedico.setMaximum(true);
+				} catch (PropertyVetoException e) {
+					e.printStackTrace();
+				}
+				anadirMedico.show();
+			}
+		});
 		mnMedicos.add(mntmAnadirMedico);
 		
 		JMenuItem menuActualizarMedico = new JMenuItem("Actualizar");
@@ -105,6 +125,18 @@ public class ClientFrame extends JFrame {
 		menuBar.add(mnTratamientos);
 		
 		JMenuItem mntmAnadirTratamiento = new JMenuItem("A\u00F1adir");
+		mntmAnadirTratamiento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AnadirTratamiento anadirTratamiento = new AnadirTratamiento(); 
+				desktopPane.add(anadirTratamiento);
+				try {
+					anadirTratamiento.setMaximum(true);
+				} catch (PropertyVetoException e) {
+					e.printStackTrace();
+				}
+				anadirTratamiento.show();
+			}
+		});
 		mnTratamientos.add(mntmAnadirTratamiento);
 		
 		JMenuItem mntmActualizarTratamiento = new JMenuItem("Actualizar");
@@ -183,6 +215,44 @@ public class ClientFrame extends JFrame {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		splitPane.setRightComponent(tabbedPane);
 		
+		JPanel panelData = new JPanel();
+		tabbedPane.addTab("Data", null, panelData, null);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		GroupLayout gl_panelData = new GroupLayout(panelData);
+		gl_panelData.setHorizontalGroup(
+			gl_panelData.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
+		);
+		gl_panelData.setVerticalGroup(
+			gl_panelData.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+		);
+		
+		JEditorPane editorPaneData = new JEditorPane();
+		scrollPane_1.setViewportView(editorPaneData);
+		panelData.setLayout(gl_panelData);
+		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("Log", null, panel, null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+		);
+		
+		JEditorPane editorPaneLog = new JEditorPane();
+		scrollPane.setViewportView(editorPaneLog);
+		panel.setLayout(gl_panel);
+		
 		
 		splitPane.setLeftComponent(desktopPane);
 		splitPane.setDividerLocation(300);
@@ -197,5 +267,15 @@ public class ClientFrame extends JFrame {
 
 	public void setPw(PrintWriter pw) {
 		this.pw = pw;
+	}
+
+
+	public ClientThreadCommands getClientThreadCommands() {
+		return clientThreadCommands;
+	}
+
+
+	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
+		this.clientThreadCommands = clientThreadCommands;
 	}
 }

@@ -8,13 +8,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import edu.ucam.client.frames.ClientFrame;
+import edu.ucam.client.frames.ClientLogin;
 
 public class ClientMain{
 
 	public static void main(String[] args) {
 		
 		//Variables
-		ClientThread clientThread = null;
+		ClientThreadCommands clientThreadCommands = null;
 		Socket socket;
 		BufferedReader br = null;
 		PrintWriter pw = null; 
@@ -31,22 +32,22 @@ public class ClientMain{
 		
 		
 		
-		//Ejecutamos ventana del Cliente********************************************************/
-		ClientFrame frame = new ClientFrame(pw);
+		//Ejecutamos ventana de Login****************************/
+		ClientLogin login = new ClientLogin(pw, clientThreadCommands);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
+					login.setVisible(true);
+				} catch(Exception t) {
+					t.printStackTrace();
 				}
 			}
-		});/************************************************************************************/
+		});
 		
-		
+
 		//Ejecutamos el hilo que escuchará al servidor******************************************/
-		clientThread = new ClientThread(frame, br);
-		clientThread.run();
+		clientThreadCommands = new ClientThreadCommands(login, br, pw);
+		clientThreadCommands.run();
 		
 		
 		

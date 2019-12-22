@@ -32,7 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 
-import edu.ucam.client.ClientThread;
+import edu.ucam.client.ClientThreadCommands;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -41,7 +41,7 @@ import java.awt.event.KeyEvent;
  * @author saura
  *
  */
-public class LoginUser extends JFrame {
+public class ClientLogin extends JFrame {
 
 	/**
 	 * 
@@ -53,14 +53,14 @@ public class LoginUser extends JFrame {
 	private JTextField textFieldUserName;
 	private JPasswordField passwordField;
 	
-	private ClientThread clientThread;
+	private ClientThreadCommands clientThreadCommands;
 	private PrintWriter pw;
 	private Integer xMouse, yMouse;
 	
 	//Constructors
-	public LoginUser(PrintWriter pw, ClientThread clientThread) {
+	public ClientLogin(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
 		this.setPw(pw);
-		this.clientThread = clientThread;
+		this.setClientThreadCommands(clientThreadCommands);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(100, 100, 314, 397);
@@ -220,6 +220,7 @@ public class LoginUser extends JFrame {
 		btnAccept.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sendData();
+				System.out.println("sended");
 			}
 		});
 		btnAccept.setBounds(226, 363, 78, 23);
@@ -237,7 +238,9 @@ public class LoginUser extends JFrame {
 		if(checkData()) {
 			try {
 				this.pw.println("USER " + this.textFieldUserName.getText());
+				pw.flush();
 				this.pw.println("PASS " + String.valueOf(this.passwordField.getPassword()));
+				pw.flush();
 			}
 			catch(Exception t) {
 			
@@ -250,8 +253,8 @@ public class LoginUser extends JFrame {
 	void cancelLogin() {
 		try {
 			this.pw.println("EXIT");
-			clientThread.setSuspended(true);
-			System.out.println("Solicitud de cancel enviada...");
+			pw.flush();
+			clientThreadCommands.setSuspended(true);
 		}
 		catch(Exception t) {
 		
@@ -290,14 +293,6 @@ public class LoginUser extends JFrame {
 
 	
 	//Getters & Setters
-	public ClientThread getClientThread() {
-		return clientThread;
-	}
-
-	public void setClientThread(ClientThread clientThread) {
-		this.clientThread = clientThread;
-	}
-
 	public PrintWriter getPw() {
 		return pw;
 	}
@@ -306,7 +301,12 @@ public class LoginUser extends JFrame {
 		this.pw = pw;
 	}
 
+	public ClientThreadCommands getClientThreadCommands() {
+		return clientThreadCommands;
+	}
 
-	
+	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
+		this.clientThreadCommands = clientThreadCommands;
+	}	
 	
 }

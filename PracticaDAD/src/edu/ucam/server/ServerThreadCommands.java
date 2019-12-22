@@ -40,7 +40,7 @@ import edu.ucam.server.functions.tratamiento.ListTratamientos;
 import edu.ucam.server.functions.tratamiento.RemoveTratamiento;
 import edu.ucam.server.functions.tratamiento.UpdateTratamiento;
 
-public class ServerThread extends Thread{
+public class ServerThreadCommands extends Thread{
 
 	//Atributes
 	private Integer ID;
@@ -61,7 +61,7 @@ public class ServerThread extends Thread{
 	private Boolean suspended = false, paused = false, usered = false, loged = false;
 	
 	//Constructors
-	public ServerThread(Integer ID, Socket socket, ArrayList<Expediente> expedientes, ArrayList<Paciente> pacientes, ArrayList<Medico> medicos, ArrayList<Tratamiento> tratamientos) {
+	public ServerThreadCommands(Integer ID, Socket socket, ArrayList<Expediente> expedientes, ArrayList<Paciente> pacientes, ArrayList<Medico> medicos, ArrayList<Tratamiento> tratamientos) {
 		
 		this.setExpedientes(expedientes);
 		this.setSocket(socket);
@@ -92,7 +92,7 @@ public class ServerThread extends Thread{
 					
 					if(this.isSuspended()) {
 						System.out.println(" >Conexión cerrada.");
-						break;
+						return;
 					}
 				}
 			} catch (InterruptedException e) {
@@ -332,6 +332,8 @@ public class ServerThread extends Thread{
 			break;
 			
 		case "EXIT"://///////////////////////
+			this.setSuspended(true);
+			System.out.println("suspended");
 			break;
 			
 		default://///////////////////////
@@ -350,7 +352,7 @@ public class ServerThread extends Thread{
 		switch (splitedMessage[0]) {
 		case "USER":
 			if(splitedMessage[1].equals("admin")) {
-				pw.println("OK " + cont + " 200" + " Welcome " + splitedMessage[1] + ".");
+				pw.println("OK " + cont + " 200 " + splitedMessage[1] + " Envíe contraseña.");
 				pw.flush();
 				usered = true;
 			}
@@ -362,7 +364,7 @@ public class ServerThread extends Thread{
 			
 		case "PASS":
 			if(splitedMessage[1].equals("admin")) {
-				pw.println("OK " + cont + " 200 " + splitedMessage[1] + " Envíe contraseña.");
+				pw.println("OK " + cont + " 200" + " Welcome " + splitedMessage[1] + ".");
 				pw.flush();
 				loged = true;
 			}

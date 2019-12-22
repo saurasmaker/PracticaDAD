@@ -18,7 +18,7 @@ public class ServerMain {
 		Integer port = 2020;
 		ServerSocket serverSocket = null;
 		Integer numThreads = 0;
-		ArrayList<ServerThread> serverThreads = new ArrayList<ServerThread>();
+		ArrayList<ServerThreadCommands> serverThreads = new ArrayList<ServerThreadCommands>();
 		ArrayList<Expediente> expedientes = new ArrayList<Expediente>();
 		ArrayList<Paciente> pacientes = new ArrayList<Paciente>();
 		ArrayList<Medico> medicos = new ArrayList<Medico>();
@@ -34,7 +34,7 @@ public class ServerMain {
 		
 		while(true) {
 			try {
-				serverThreads.add(new ServerThread(numThreads, serverSocket.accept(), expedientes, pacientes, medicos, tratamientos));
+				serverThreads.add(new ServerThreadCommands(numThreads, serverSocket.accept(), expedientes, pacientes, medicos, tratamientos));
 				serverThreads.get(numThreads).run();
 				System.out.println(" >Nueva conexión establecida.");
 				++numThreads;
