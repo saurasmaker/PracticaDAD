@@ -165,7 +165,7 @@ public class Singleton {
 	}
 	
 	
-	public static void deleteMedico(String idMedico, ArrayList<Medico> medicos) {
+	public static void removeMedico(String idMedico, ArrayList<Medico> medicos) {
 		
 		for(Medico m: medicos)
 			if(m.getId().equals(idMedico)) {
@@ -212,7 +212,7 @@ public class Singleton {
 	}
 	
 	
-	public static void deleteTratamiento(String idTratamiento, ArrayList<Tratamiento> tratamientos) {
+	public static void removeTratamiento(String idTratamiento, ArrayList<Tratamiento> tratamientos) {
 		
 		for(Tratamiento m: tratamientos)
 			if(m.getId().equals(idTratamiento)) {
