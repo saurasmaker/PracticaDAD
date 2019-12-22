@@ -22,7 +22,7 @@ import java.beans.PropertyVetoException;
 import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 
-public class EliminarMedico extends JInternalFrame {
+public class EliminarTratamiento extends JInternalFrame {
 	
 	/**
 	 * 
@@ -38,14 +38,14 @@ public class EliminarMedico extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public EliminarMedico() {
+	public EliminarTratamiento() {
 		setBounds(100, 100, 483, 295);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
 		
-		JLabel lblEliminarMdico = new JLabel("Eliminar M\u00E9dico");
-		lblEliminarMdico.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEliminarMdico.setFont(new Font("Tahoma", Font.BOLD, 18));
+		JLabel lblEliminarTratamiento = new JLabel("Eliminar Tratamiento");
+		lblEliminarTratamiento.setHorizontalAlignment(SwingConstants.CENTER);
+		lblEliminarTratamiento.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
 		JLabel lblNewLabelID = new JLabel("ID:");
 		lblNewLabelID.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -64,8 +64,8 @@ public class EliminarMedico extends JInternalFrame {
 		
 		JButton btnNewButtonCancelar = new JButton("Cancelar");
 		btnNewButtonCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelRemoveMedico();
+			public void actionPerformed(ActionEvent arg0) {
+				cancelRemoveTratamiento();
 				dispose();
 			}
 		});
@@ -75,7 +75,7 @@ public class EliminarMedico extends JInternalFrame {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblEliminarMdico, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+						.addComponent(lblEliminarTratamiento, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
 						.addComponent(lblNewLabelID)
 						.addComponent(textFieldID, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
@@ -88,7 +88,7 @@ public class EliminarMedico extends JInternalFrame {
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblEliminarMdico)
+					.addComponent(lblEliminarTratamiento)
 					.addGap(18)
 					.addComponent(lblNewLabelID)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -117,7 +117,7 @@ public class EliminarMedico extends JInternalFrame {
 		
 		if(checkData()) {
 			try {
-				this.pw.println("REMOVEMEDICO " + this.textFieldID.getText());
+				this.pw.println("REMOVETRATAMIENTO " + this.textFieldID.getText());
 				pw.flush();
 			}
 			catch(Exception t) {
@@ -130,9 +130,9 @@ public class EliminarMedico extends JInternalFrame {
 		return;
 	}
 	
-	void cancelRemoveMedico() {
+	void cancelRemoveTratamiento() {
 		try {
-			this.pw.println("EXIT REMOVE MEDICO");
+			this.pw.println("EXIT REMOVE TRATAMIENTO");
 			pw.flush();
 		}
 		catch(Exception t) {
