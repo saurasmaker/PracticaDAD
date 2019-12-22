@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+<<<<<<< HEAD
 	<classpathentry kind="src" path="PracticaDAD/src"/>
 	<classpathentry kind="lib" path="PracticaDAD/lib/libreriapracticas.jar"/>
 	<classpathentry kind="output" path="PracticaDAD/bin"/>
+=======
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/libreriapracticas.jar"/>
+	<classpathentry kind="lib" path="lib/ComponentResizer.jar"/>
+	<classpathentry kind="output" path="bin"/>
+>>>>>>> develop
 </classpath>
