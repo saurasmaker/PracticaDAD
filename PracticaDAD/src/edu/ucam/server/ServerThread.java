@@ -18,12 +18,27 @@ import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
 import edu.ucam.server.functions.expediente.AddExpediente;
 import edu.ucam.server.functions.expediente.GetExpediente;
+import edu.ucam.server.functions.expediente.RemoveExpediente;
+import edu.ucam.server.functions.medico.AddMedico;
+import edu.ucam.server.functions.medico.CountMedicos;
+import edu.ucam.server.functions.medico.GenerateMedicoId;
+import edu.ucam.server.functions.medico.GetMedico;
+import edu.ucam.server.functions.medico.ListMedicos;
+import edu.ucam.server.functions.medico.RemoveMedico;
+import edu.ucam.server.functions.medico.UpdateMedico;
 import edu.ucam.server.functions.paciente.AddPaciente;
+import edu.ucam.server.functions.paciente.CountPacientes;
 import edu.ucam.server.functions.paciente.GeneratePacienteId;
 import edu.ucam.server.functions.paciente.GetPaciente;
 import edu.ucam.server.functions.paciente.ListPacientes;
 import edu.ucam.server.functions.paciente.RemovePaciente;
 import edu.ucam.server.functions.paciente.UpdatePaciente;
+import edu.ucam.server.functions.tratamiento.AddTratamiento;
+import edu.ucam.server.functions.tratamiento.CountTratamientos;
+import edu.ucam.server.functions.tratamiento.GetTratamiento;
+import edu.ucam.server.functions.tratamiento.ListTratamientos;
+import edu.ucam.server.functions.tratamiento.RemoveTratamiento;
+import edu.ucam.server.functions.tratamiento.UpdateTratamiento;
 
 public class ServerThread extends Thread{
 
@@ -134,7 +149,7 @@ public class ServerThread extends Thread{
 		case "UPDATEPACIENTE"://///////////////////////
 			if(loged) {
 				try {
-					UpdatePaciente.run(splitedMessage[1], new Paciente(GeneratePacienteId.run(pacientes), splitedMessage[2], splitedMessage[3], new SimpleDateFormat("dd/MM/yyyy").parse(splitedMessage[4])), pacientes, cont, socket.getPort(), message, pw);
+					UpdatePaciente.run(splitedMessage[1], new Paciente(null, splitedMessage[2], splitedMessage[3], new SimpleDateFormat("dd/MM/yyyy").parse(splitedMessage[4])), pacientes, cont, socket.getPort(), address, pw);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
@@ -171,6 +186,10 @@ public class ServerThread extends Thread{
 			break;
 			
 		case "COUNTPACIENTES"://///////////////////////
+			if(loged) 
+				CountPacientes.run(pacientes, cont, message, socket.getLocalPort(), pw); 
+			else 
+				this.userNotLoged();
 			break;
 			
 		case "ADDEXPEDIENTE"://///////////////////////
@@ -184,16 +203,22 @@ public class ServerThread extends Thread{
 			
 		case "GETEXPEDIENTE"://///////////////////////
 			if(loged) {
-				GetExpediente.run(splitedMessage[1], expedientes, pw, cont, address.toString(), socket.getLocalPort());
+				GetExpediente.run(splitedMessage[1], expedientes, cont, address, socket.getPort(), pw);
 			}
 			else this.userNotLoged();
 			
 			break;
 			
 		case "REMOVEEXPEDIENTE"://///////////////////////
+			if(loged) 
+				RemoveExpediente.run(splitedMessage[1], expedientes, cont, message, socket.getLocalPort(), pw); 
+			else 
+				this.userNotLoged();
+			
 			break;
 		
 		case "LISTEXPEDIENTES"://///////////////////////
+			
 			break;
 			
 		case "ADDPACIENTE2EXP"://///////////////////////
@@ -215,39 +240,95 @@ public class ServerThread extends Thread{
 			break;
 			
 		case "ADDMEDICO"://///////////////////////
+			if(loged) 
+				AddMedico.run(new Medico(GenerateMedicoId.run(medicos), splitedMessage[1], splitedMessage[2], splitedMessage[3]), medicos, cont, socket.getPort(), address, pw); 
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "UPDATEMEDICO"://///////////////////////
+			if(loged) 
+				UpdateMedico.run(splitedMessage[1], new Medico(null, splitedMessage[2], splitedMessage[3], splitedMessage[4]), medicos, cont, socket.getPort(), address, pw); 
+			else 
+				this.userNotLoged();
 			break;
 			
 		case "GETMEDICO"://///////////////////////
+			if(loged) 
+				GetMedico.run(splitedMessage[1], medicos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "REMOVEMEDICO"://///////////////////////
+			if(loged) 
+				RemoveMedico.run(splitedMessage[1], medicos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
 			break;
 			
 		case "LISTMEDICOS"://///////////////////////
+			if(loged) 
+				ListMedicos.run(medicos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
 			break;
 			
 		case "COUNTMEDICOS"://///////////////////////
+			if(loged) 
+				CountMedicos.run(medicos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "ADDTRATAMIENTO"://///////////////////////
+			if(loged) 
+				AddTratamiento.run(new Tratamiento(), tratamientos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "UPDATETRATAMIENTO"://///////////////////////
+			if(loged) 
+				UpdateTratamiento.run(splitedMessage[1], new Tratamiento(), tratamientos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "GETTRATAMIENTO"://///////////////////////
+			if(loged) 
+				GetTratamiento.run(splitedMessage[1], tratamientos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "REMOVETRATAMIENTO"://///////////////////////
+			if(loged) 
+				RemoveTratamiento.run(splitedMessage[1], tratamientos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "LISTTRATAMIENTOS"://///////////////////////
+			if(loged) 
+				ListTratamientos.run(tratamientos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
+			
 			break;
 			
 		case "COUNTTRATAMIENTOS"://///////////////////////
+			if(loged) 
+				CountTratamientos.run(tratamientos, cont, address, socket.getPort(), pw);
+			else 
+				this.userNotLoged();
 			break;
 			
 		case "EXIT"://///////////////////////
@@ -256,7 +337,6 @@ public class ServerThread extends Thread{
 		default://///////////////////////
 			pw.println("Command not found");
 			pw.flush();
-			System.out.println("Command not found");
 			break;
 			
 		}
@@ -270,13 +350,11 @@ public class ServerThread extends Thread{
 		switch (splitedMessage[0]) {
 		case "USER":
 			if(splitedMessage[1].equals("admin")) {
-				System.out.println("OK " + cont + " 200" + " Welcome " + splitedMessage[1] + ".");
 				pw.println("OK " + cont + " 200" + " Welcome " + splitedMessage[1] + ".");
 				pw.flush();
 				usered = true;
 			}
 			else {
-				System.out.println("Failed " + cont + " 400" + " Not User.");
 				pw.println("Failed " + cont + " 400" + " Not User.");
 				pw.flush();
 			}
@@ -284,13 +362,11 @@ public class ServerThread extends Thread{
 			
 		case "PASS":
 			if(splitedMessage[1].equals("admin")) {
-				System.out.println("OK " + cont + " 200 " + splitedMessage[1] + " Envíe contraseña.");
 				pw.println("OK " + cont + " 200 " + splitedMessage[1] + " Envíe contraseña.");
 				pw.flush();
 				loged = true;
 			}
 			else {
-				System.out.println("Failed " + cont + " 400 " + splitedMessage[1] + " Prueba de nuevo.");
 				pw.println("Failed " + cont + " 400 " + splitedMessage[1] + " Prueba de nuevo.");
 				pw.flush();
 			}

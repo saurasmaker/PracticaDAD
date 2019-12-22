@@ -7,7 +7,7 @@ import edu.ucam.pojos.Tratamiento;
 import edu.ucam.server.functions.Comando;
 
 public class CountTratamientos implements Comando{
-	public static void run(ArrayList<Tratamiento> tratamientos, int cont, int port, String address, PrintWriter pw) 
+	public static void run(ArrayList<Tratamiento> tratamientos, int cont, String address, int port, PrintWriter pw) 
 	{		
 		try 
 		{

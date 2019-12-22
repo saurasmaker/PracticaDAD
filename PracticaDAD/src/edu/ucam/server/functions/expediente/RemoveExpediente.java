@@ -8,7 +8,7 @@ import edu.ucam.server.functions.Comando;
 import edu.ucam.server.functions.Singleton;
 
 public class RemoveExpediente implements Comando{
-	public static void run(String idExpediente, ArrayList<Expediente> expedientes, PrintWriter pw, int cont, String address, String port) 
+	public static void run(String idExpediente, ArrayList<Expediente> expedientes, int cont, String address, int port, PrintWriter pw) 
 	{
 		try 
 		{

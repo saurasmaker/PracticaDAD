@@ -14,7 +14,7 @@ public class GetExpediente implements Comando{
 	//Atributes
 	
 	//Methods
-	public static void run(String idExpediente, ArrayList<Expediente> expedientes, PrintWriter pw, int cont, String address, int port) 
+	public static void run(String idExpediente, ArrayList<Expediente> expedientes, int cont, String address, int port, PrintWriter pw) 
 	{
 		try 
 		{

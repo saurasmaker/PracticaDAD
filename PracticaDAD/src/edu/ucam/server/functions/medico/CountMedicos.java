@@ -7,7 +7,7 @@ import edu.ucam.pojos.Medico;
 import edu.ucam.server.functions.Comando;
 
 public class CountMedicos implements Comando{
-	public static void run(ArrayList<Medico> medicos, int cont, int port, String address, PrintWriter pw) 
+	public static void run(ArrayList<Medico> medicos, int cont, String address, int port, PrintWriter pw) 
 	{		
 		try 
 		{
