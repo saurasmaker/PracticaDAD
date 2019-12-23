@@ -304,40 +304,52 @@ public class ServerThreadCommands extends Thread{
 			break;
 			
 		case "UPDATETRATAMIENTO"://///////////////////////
-			if(loged) 
-				UpdateTratamiento.run(splitedMessage[1], new Tratamiento(), tratamientos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				UpdateTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis());
+			}
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "GETTRATAMIENTO"://///////////////////////
-			if(loged) 
-				GetTratamiento.run(splitedMessage[1], tratamientos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				GetTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
+			}
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "REMOVETRATAMIENTO"://///////////////////////
-			if(loged) 
-				RemoveTratamiento.run(splitedMessage[1], tratamientos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				RemoveTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
+			}
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "LISTTRATAMIENTOS"://///////////////////////
-			if(loged) 
-				ListTratamientos.run(tratamientos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				ListTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOos());
+			}
+				
+				
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "COUNTTRATAMIENTOS"://///////////////////////
-			if(loged) 
-				CountTratamientos.run(tratamientos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				CountTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getPw());
+			}
 			else 
 				this.userNotLoged();
 			break;

@@ -7,19 +7,19 @@ import edu.ucam.pojos.Medico;
 import edu.ucam.server.functions.Comando;
 
 public class CountMedicos implements Comando{
-	public static void run(ArrayList<Medico> medicos, int cont, String address, int port, PrintWriter pw, PrintWriter data) 
+	public static void run(ArrayList<Medico> medicos, int cont, String address, int port, PrintWriter pwCommands, PrintWriter pwData) 
 	{		
 		try 
 		{
-			data.println("\n >MEDICOS \n   +Cantidad: " + medicos.size());
-			data.flush();
-			pw.println("\n OK " + cont + " 200 " + port + " " + address);
-			pw.flush();
+			pwData.println("\n >MEDICOS \n   +Cantidad: " + medicos.size());
+			pwData.flush();
+			pwCommands.println("\n OK " + cont + " 200 " + port + " " + address);
+			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pw.println("FAILED " + cont + " codrespuesta " + e.getMessage());
-			pw.flush();
+			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.flush();
 		}
 	}
 }

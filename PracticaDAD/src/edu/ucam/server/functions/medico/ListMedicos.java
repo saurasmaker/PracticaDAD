@@ -8,21 +8,21 @@ import edu.ucam.pojos.Medico;
 import edu.ucam.server.functions.Comando;
 
 public class ListMedicos implements Comando{
-	public static void run(ArrayList<Medico> medicos, int cont, String address, int port, PrintWriter pw, ObjectOutputStream oos) 
+	public static void run(ArrayList<Medico> medicos, int cont, String address, int port, PrintWriter pwCommands, ObjectOutputStream oosData) 
 	{		
 		try 
 		{
 			for(Medico p: medicos) {
-				oos.writeObject(p);
-				oos.flush();
+				oosData.writeObject(p);
+				oosData.flush();
 			}
-			pw.println("OK " + cont + " 200 " + address + " " + port);
-			pw.flush();
+			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pw.println("FAILED " + cont + " codrespuesta " + e.getMessage());
-			pw.flush();
+			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.flush();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package edu.ucam.server.functions.tratamiento;
 
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -7,20 +8,23 @@ import edu.ucam.pojos.Tratamiento;
 import edu.ucam.server.functions.Comando;
 
 public class ListTratamientos implements Comando{
-	public static void run(ArrayList<Tratamiento> tratamientos, int cont, String address, int port, PrintWriter pw) 
+	public static void run(ArrayList<Tratamiento> tratamientos, int cont, String address, int port, PrintWriter pwCommands, ObjectOutputStream oosData) 
 	{		
 		try 
 		{
-			for(Tratamiento t: tratamientos)
-				pw.println("   +Tratamiento: " +"\n     -Descripción: " +t.getDescripcion());
+			for(Tratamiento t: tratamientos) {
+				oosData.writeObject(t);
+				oosData.flush();
+			}
+			//("   +Tratamiento: " +"\n     -Descripción: " +t.getDescripcion());
 			
-			pw.println("OK " + cont + " 200 " + address + " " + port);
-			pw.flush();
+			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pw.println("FAILED " + cont + " codrespuesta " + e.getMessage());
-			pw.flush();
+			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.flush();
 		}
 	}
 }

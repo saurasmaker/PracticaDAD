@@ -10,21 +10,21 @@ import edu.ucam.server.functions.Comando;
 import edu.ucam.server.functions.Singleton;
 
 public class GetMedico implements Comando{
-	public static void run(ArrayList<Medico> medicos, int cont, String address, int port, PrintWriter pw, ObjectOutputStream oos, BufferedReader brData) 
+	public static void run(ArrayList<Medico> medicos, int cont, String address, int port, PrintWriter pwCommands, ObjectOutputStream oosData, BufferedReader brData) 
 	{		
 		try 
 		{
 			Medico medico = Singleton.getMedico(brData.readLine(), medicos);
-			oos.writeObject(medico);
-			oos.flush();
+			oosData.writeObject(medico);
+			oosData.flush();
 			//("   +Medico: " +"\n     -Nombre: " +medico.getNombre() + "\n     -Apellidos: "  + medico.getApellidos() + "\n     -Especialidad: "  + medico.getEspecialidad());
-			pw.println("OK " + cont + " 200 " + address + " " + port);
-			pw.flush();
+			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pw.println("FAILED " + cont + " codrespuesta " + e.getMessage());
-			pw.flush();
+			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.flush();
 		}
 	}
 }
