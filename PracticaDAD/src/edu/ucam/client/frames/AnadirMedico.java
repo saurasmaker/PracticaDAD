@@ -10,7 +10,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import edu.ucam.client.ClientThreadCommands;
 import edu.ucam.pojos.Medico;
 import edu.ucam.server.ServerDataChannel;
 
@@ -20,7 +19,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.beans.PropertyVetoException;
 import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 
@@ -80,6 +78,7 @@ public class AnadirMedico extends JInternalFrame {
 		JButton btnNewButtonCancelar = new JButton("Cancelar");
 		btnNewButtonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				cancelAddMedico();
 				dispose();
 			}
@@ -150,7 +149,7 @@ public class AnadirMedico extends JInternalFrame {
 			
 			medico.setNombre(textFieldNombre.getText());
 			medico.setApellidos(textFieldApellidos.getText());
-			medico.setEspecialidad( comboBoxEspecialidad.getSelectedItem().toString());
+			medico.setEspecialidad(comboBoxEspecialidad.getSelectedItem().toString());
 			
 			try {
 				this.pw.println("ADDMEDICO");
