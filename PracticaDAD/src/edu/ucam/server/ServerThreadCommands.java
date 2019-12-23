@@ -160,8 +160,10 @@ public class ServerThreadCommands extends Thread{
 			break;
 			
 		case "GETPACIENTE"://///////////////////////
-			if(loged) 
-				GetPaciente.run(splitedMessage[1], pacientes, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				GetPaciente.run(splitedMessage[1], pacientes, cont, address, socket.getPort(), pw, sdc.getOos());
+			}
 			
 			else 
 				this.userNotLoged();

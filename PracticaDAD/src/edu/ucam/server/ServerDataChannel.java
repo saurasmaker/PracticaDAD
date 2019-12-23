@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -14,6 +15,7 @@ public class ServerDataChannel{
 	//Atributes
 	private PrintWriter pw;
 	private BufferedReader br;
+	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private ServerSocket serverSocket;
 	private Socket socket;
@@ -71,13 +73,13 @@ public class ServerDataChannel{
 		
 		Object object = null;
 		
-		/*try {
-			//data = br.readObject();
-		} catch (IOException e) {
+		try {
+			object = ois.readObject();
+		} catch (ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 		
-		return null;
+		return object;
 	}
 	
 	//Getters & Setters
@@ -108,6 +110,16 @@ public class ServerDataChannel{
 
 	public void setOis(ObjectInputStream ois) {
 		this.ois = ois;
+	}
+
+
+	public ObjectOutputStream getOos() {
+		return oos;
+	}
+
+
+	public void setOos(ObjectOutputStream oos) {
+		this.oos = oos;
 	}
 
 	
