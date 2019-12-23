@@ -46,10 +46,6 @@ public class ClientMain{
 
 		//Ejecutamos el hilo que escuchará al servidor******************************************/
 		clientThreadCommands = new ClientThreadCommands(login, br, pw);
-		clientThreadCommands.run();
-		
-		
-		
+		clientThreadCommands.run();	
 	}
-
 }
