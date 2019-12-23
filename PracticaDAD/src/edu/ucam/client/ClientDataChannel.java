@@ -33,7 +33,7 @@ public class ClientDataChannel{
 	private void setConnection() {
 		
 		try {
-			serverSocket = new ServerSocket(port++);
+			serverSocket = new ServerSocket(port);
 			socket = serverSocket.accept();	
 			setBridges();
 		} catch (IOException e) {
@@ -120,7 +120,5 @@ public class ClientDataChannel{
 
 	public void setOos(ObjectOutputStream oos) {
 		this.oos = oos;
-	}
-
-	
+	}	
 }
