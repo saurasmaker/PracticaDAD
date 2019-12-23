@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 
 import edu.ucam.client.ClientThreadCommands;
 import edu.ucam.pojos.Medico;
+import edu.ucam.server.ServerDataChannel;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
@@ -36,6 +37,7 @@ public class AnadirMedico extends JInternalFrame {
 	
 	private JTextField textFieldNombre;
 	private JTextField textFieldApellidos;
+	private JComboBox comboBoxEspecialidad;
 
 	/**
 	 * Create the frame.
@@ -64,7 +66,7 @@ public class AnadirMedico extends JInternalFrame {
 		JLabel lblNewLabelEspecialidad = new JLabel("Especialidad:\r\n");
 		lblNewLabelEspecialidad.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		
-		JComboBox comboBoxEspecialidad = new JComboBox();
+		comboBoxEspecialidad = new JComboBox();
 		
 		JButton btnNewButtonAnadir = new JButton("A\u00F1adir");
 		btnNewButtonAnadir.addActionListener(new ActionListener() {
@@ -138,20 +140,22 @@ public class AnadirMedico extends JInternalFrame {
 		repaint();
 	}
 	
-	private String generateID() {
-		
-		
-		
-		
-		return null;
-	}
 	
 	private void sendData() {
 		
+		Medico medico = new Medico();
+		ServerDataChannel sdc = new ServerDataChannel();
+		
 		if(checkData()) {
+			
+			medico.setNombre(textFieldNombre.getText());
+			medico.setApellidos(textFieldApellidos.getText());
+			medico.setEspecialidad( comboBoxEspecialidad.getSelectedItem().toString());
+			
 			try {
-				this.pw.println("ADDMEDICO ");
-				pw.flush();
+				this.pw.println("ADDMEDICO");
+				this.pw.flush();
+				sdc.getOos().writeObject(medico);
 			}
 			catch(Exception t) {
 			

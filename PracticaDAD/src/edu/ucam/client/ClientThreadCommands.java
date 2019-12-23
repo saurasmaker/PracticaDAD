@@ -70,12 +70,9 @@ public class ClientThreadCommands extends Thread{
 		return;
 	}
 	
-	private void checkCommand(String message) {
+	private void checkCommand(String command) {
 		
-		message += " 1";
-		this.splitedMessage = message.split(" ");
-		
-		switch (splitedMessage[0]) {
+		switch (command) {
 		
 		case "USER"://///////////////////////
 			this.checkUser();
