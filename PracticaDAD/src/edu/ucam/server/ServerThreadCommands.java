@@ -8,8 +8,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import edu.ucam.pojos.Expediente;
@@ -28,7 +26,6 @@ import edu.ucam.server.functions.medico.RemoveMedico;
 import edu.ucam.server.functions.medico.UpdateMedico;
 import edu.ucam.server.functions.paciente.AddPaciente;
 import edu.ucam.server.functions.paciente.CountPacientes;
-import edu.ucam.server.functions.paciente.GeneratePacienteId;
 import edu.ucam.server.functions.paciente.GetPaciente;
 import edu.ucam.server.functions.paciente.ListPacientes;
 import edu.ucam.server.functions.paciente.RemovePaciente;
@@ -135,11 +132,8 @@ public class ServerThreadCommands extends Thread{
 			
 		case "ADDPACIENTE"://///////////////////////
 			if(loged) {
-				try {
-					AddPaciente.run(new Paciente(GeneratePacienteId.run(pacientes), splitedMessage[1], splitedMessage[2], new SimpleDateFormat("dd/MM/yyyy").parse(splitedMessage[3])), pacientes, cont, socket.getPort(), message, pw);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				ServerDataChannel sdc = new ServerDataChannel();
+				AddPaciente.run(pacientes, cont, socket.getPort(), message, pw, sdc.getOis());
 			}
 			else 
 				this.userNotLoged();
@@ -148,11 +142,8 @@ public class ServerThreadCommands extends Thread{
 		
 		case "UPDATEPACIENTE"://///////////////////////
 			if(loged) {
-				try {
-					UpdatePaciente.run(splitedMessage[1], new Paciente(null, splitedMessage[2], splitedMessage[3], new SimpleDateFormat("dd/MM/yyyy").parse(splitedMessage[4])), pacientes, cont, socket.getPort(), address, pw);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				ServerDataChannel sdc = new ServerDataChannel();
+				UpdatePaciente.run(splitedMessage[1], pacientes, cont, socket.getPort(), address, pw, sdc.getOis());	
 			}
 			else 
 				this.userNotLoged();
@@ -171,25 +162,30 @@ public class ServerThreadCommands extends Thread{
 			break;
 			
 		case "REMOVEPACIENTE"://///////////////////////
-			if(loged) 
-				RemovePaciente.run(splitedMessage[1], pacientes, cont, address, socket.getPort(), pw);
-			
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				RemovePaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getBr());
+			}
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "LISTPACIENTES"://///////////////////////
-			if(loged) 
-				ListPacientes.run(pacientes, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				ListPacientes.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos());
+			}
 			
 			else 
 				this.userNotLoged();
 			break;
 			
 		case "COUNTPACIENTES"://///////////////////////
-			if(loged) 
-				CountPacientes.run(pacientes, cont, message, socket.getLocalPort(), pw); 
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				CountPacientes.run(pacientes, cont, message, socket.getLocalPort(), pw, sdc.getPw()); 
+			}
 			else 
 				this.userNotLoged();
 			break;

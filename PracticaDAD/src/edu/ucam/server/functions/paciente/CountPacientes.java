@@ -7,11 +7,11 @@ import edu.ucam.pojos.Paciente;
 import edu.ucam.server.functions.Comando;
 
 public class CountPacientes implements Comando{
-	public static void run(ArrayList<Paciente> pacientes, int cont, String address, int port, PrintWriter pw) 
+	public static void run(ArrayList<Paciente> pacientes, int cont, String address, int port, PrintWriter pw, PrintWriter data) 
 	{		
 		try 
 		{
-			pw.println("\n >PACIENTES \n   +Cantidad: " + pacientes.size());
+			data.println("\n >PACIENTES \n   +Cantidad: " + pacientes.size());
 			pw.println("\n OK " + cont + " 200 " + port + " " + address);
 			pw.flush();
 		} 

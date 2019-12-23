@@ -1,5 +1,6 @@
 package edu.ucam.server.functions.paciente;
 
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -8,11 +9,11 @@ import edu.ucam.server.functions.Comando;
 import edu.ucam.server.functions.Singleton;
 
 public class AddPaciente implements Comando{
-	public static void run(Paciente paciente, ArrayList<Paciente> pacientes, int cont, int port, String address, PrintWriter pw) 
+	public static void run(ArrayList<Paciente> pacientes, int cont, int port, String address, PrintWriter pw, ObjectInputStream ois) 
 	{		
 		try 
 		{
-			Singleton.addPaciente(paciente, pacientes);
+			Singleton.addPaciente((Paciente)ois.readObject(), pacientes);
 			pw.println("OK " + cont + " 200 " + port + " " + address);
 			pw.flush();
 		} 

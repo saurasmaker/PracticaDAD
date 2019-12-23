@@ -13,8 +13,8 @@ public class GetPaciente implements Comando{
 	{		
 		try 
 		{
-			Paciente paciente = Singleton.getPaciente(idPaciente, pacientes);
-			oos.writeObject(paciente);
+			Paciente p = Singleton.getPaciente(idPaciente, pacientes);
+			oos.writeObject(p);
 			oos.flush();
 		} 
 		catch (Exception e) 
