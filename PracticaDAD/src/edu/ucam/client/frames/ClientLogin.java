@@ -233,7 +233,7 @@ public class ClientLogin extends JFrame {
 	}
 	
 	//Methods
-	void sendData() {
+	private void sendData() {
 		
 		if(checkData()) {
 			try {
@@ -250,7 +250,7 @@ public class ClientLogin extends JFrame {
 		return;
 	}
 	
-	void cancelLogin() {
+	private void cancelLogin() {
 		try {
 			this.pw.println("EXIT");
 			pw.flush();
@@ -261,7 +261,7 @@ public class ClientLogin extends JFrame {
 		}
 	}
 	
-	Boolean checkData() {
+	private Boolean checkData() {
 				
 		if(textFieldUserName.getText().compareTo("")==0) {
 			JOptionPane.showMessageDialog(null,"You must complete user name field.","Field error", JOptionPane.WARNING_MESSAGE);

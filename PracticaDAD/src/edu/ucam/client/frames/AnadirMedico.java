@@ -146,7 +146,7 @@ public class AnadirMedico extends JInternalFrame {
 		return null;
 	}
 	
-	void sendData() {
+	private void sendData() {
 		
 		if(checkData()) {
 			try {
@@ -164,7 +164,7 @@ public class AnadirMedico extends JInternalFrame {
 		return;
 	}
 	
-	void cancelAddMedico() {
+	private void cancelAddMedico() {
 		try {
 			this.pw.println("EXIT ADD MEDICO");
 			pw.flush();
@@ -174,7 +174,7 @@ public class AnadirMedico extends JInternalFrame {
 		}
 	}
 	
-	Boolean checkData() {
+	private Boolean checkData() {
 		JComboBox comboBoxEspecialidad = new JComboBox();
 		if(textFieldNombre.getText() == null) {
 			JOptionPane.showMessageDialog(null,"You must complete user name field.","Field error", JOptionPane.WARNING_MESSAGE);

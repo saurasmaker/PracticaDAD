@@ -113,7 +113,7 @@ public class EliminarPaciente extends JInternalFrame {
 		repaint();
 	}
 	
-	void sendData() {
+	private void sendData() {
 		
 		if(checkData()) {
 			try {
@@ -130,7 +130,7 @@ public class EliminarPaciente extends JInternalFrame {
 		return;
 	}
 	
-	void cancelRemovePaciente() {
+	private void cancelRemovePaciente() {
 		try {
 			this.pw.println("EXIT REMOVE PACIENTE");
 			pw.flush();
@@ -140,7 +140,7 @@ public class EliminarPaciente extends JInternalFrame {
 		}
 	}
 	
-	Boolean checkData() {
+	private Boolean checkData() {
 		if(textFieldID.getText() == null) {
 			JOptionPane.showMessageDialog(null,"You must complete user name field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
