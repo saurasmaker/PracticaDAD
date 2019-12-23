@@ -64,6 +64,8 @@ public class AnadirMedico extends JInternalFrame {
 		JLabel lblNewLabelEspecialidad = new JLabel("Especialidad:\r\n");
 		lblNewLabelEspecialidad.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		
+		JComboBox comboBoxEspecialidad = new JComboBox();
+		
 		JButton btnNewButtonAnadir = new JButton("A\u00F1adir");
 		btnNewButtonAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
