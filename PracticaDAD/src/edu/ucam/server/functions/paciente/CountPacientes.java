@@ -12,6 +12,7 @@ public class CountPacientes implements Comando{
 		try 
 		{
 			data.println("\n >PACIENTES \n   +Cantidad: " + pacientes.size());
+			data.flush();
 			pw.println("\n OK " + cont + " 200 " + port + " " + address);
 			pw.flush();
 		} 

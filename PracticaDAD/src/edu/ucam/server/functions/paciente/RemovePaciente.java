@@ -9,18 +9,18 @@ import edu.ucam.server.functions.Comando;
 import edu.ucam.server.functions.Singleton;
 
 public class RemovePaciente implements Comando{
-	public static void run(ArrayList<Paciente> pacientes, int cont, String address, int port, PrintWriter pw, BufferedReader br) 
+	public static void run(ArrayList<Paciente> pacientes, int cont, String address, int port, PrintWriter pwCommands, BufferedReader brData) 
 	{		
 		try 
 		{
-			Singleton.removePaciente(br.readLine(), pacientes);
-			pw.println("OK " + cont + " 200 " + address + " " + port);
-			pw.flush();
+			Singleton.removePaciente(brData.readLine(), pacientes);
+			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pw.println("FAILED " + cont + " codrespuesta " + e.getMessage());
-			pw.flush();
+			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.flush();
 		}
 	}
 }

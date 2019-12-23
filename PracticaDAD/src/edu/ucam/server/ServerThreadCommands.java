@@ -19,7 +19,6 @@ import edu.ucam.server.functions.expediente.GetExpediente;
 import edu.ucam.server.functions.expediente.RemoveExpediente;
 import edu.ucam.server.functions.medico.AddMedico;
 import edu.ucam.server.functions.medico.CountMedicos;
-import edu.ucam.server.functions.medico.GenerateMedicoId;
 import edu.ucam.server.functions.medico.GetMedico;
 import edu.ucam.server.functions.medico.ListMedicos;
 import edu.ucam.server.functions.medico.RemoveMedico;
@@ -143,7 +142,7 @@ public class ServerThreadCommands extends Thread{
 		case "UPDATEPACIENTE"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel();
-				UpdatePaciente.run(splitedMessage[1], pacientes, cont, socket.getPort(), address, pw, sdc.getOis());	
+				UpdatePaciente.run(pacientes, cont, socket.getPort(), address, pw, sdc.getOis());	
 			}
 			else 
 				this.userNotLoged();
@@ -153,7 +152,7 @@ public class ServerThreadCommands extends Thread{
 		case "GETPACIENTE"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel();
-				GetPaciente.run(splitedMessage[1], pacientes, cont, address, socket.getPort(), pw, sdc.getOos());
+				GetPaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
 			}
 			
 			else 
@@ -238,53 +237,67 @@ public class ServerThreadCommands extends Thread{
 			break;
 			
 		case "ADDMEDICO"://///////////////////////
-			if(loged) 
-				AddMedico.run(new Medico(GenerateMedicoId.run(medicos), splitedMessage[1], splitedMessage[2], splitedMessage[3]), medicos, cont, socket.getPort(), address, pw); 
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				AddMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis()); 
+			}
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "UPDATEMEDICO"://///////////////////////
-			if(loged) 
-				UpdateMedico.run(splitedMessage[1], new Medico(null, splitedMessage[2], splitedMessage[3], splitedMessage[4]), medicos, cont, socket.getPort(), address, pw); 
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				UpdateMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis()); 
+			}
 			else 
 				this.userNotLoged();
 			break;
 			
 		case "GETMEDICO"://///////////////////////
-			if(loged) 
-				GetMedico.run(splitedMessage[1], medicos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				GetMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
+			}
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "REMOVEMEDICO"://///////////////////////
-			if(loged) 
-				RemoveMedico.run(splitedMessage[1], medicos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				RemoveMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getBr());
+			}
 			else 
 				this.userNotLoged();
 			break;
 			
 		case "LISTMEDICOS"://///////////////////////
-			if(loged) 
-				ListMedicos.run(medicos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				ListMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos());
+			}
 			else 
 				this.userNotLoged();
 			break;
 			
 		case "COUNTMEDICOS"://///////////////////////
-			if(loged) 
-				CountMedicos.run(medicos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				CountMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getPw());
+			}
 			else 
 				this.userNotLoged();
 			
 			break;
 			
 		case "ADDTRATAMIENTO"://///////////////////////
-			if(loged) 
-				AddTratamiento.run(new Tratamiento(), tratamientos, cont, address, socket.getPort(), pw);
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel();
+				AddTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis());
+			}
 			else 
 				this.userNotLoged();
 			

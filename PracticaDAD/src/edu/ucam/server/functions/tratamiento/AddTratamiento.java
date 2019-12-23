@@ -1,5 +1,6 @@
 package edu.ucam.server.functions.tratamiento;
 
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -8,11 +9,11 @@ import edu.ucam.server.functions.Comando;
 import edu.ucam.server.functions.Singleton;
 
 public class AddTratamiento implements Comando{
-	public static void run(Tratamiento tratamiento, ArrayList<Tratamiento> tratamientos, int cont, String address, int port, PrintWriter pw) 
+	public static void run(ArrayList<Tratamiento> tratamientos, int cont, String address, int port, PrintWriter pw, ObjectInputStream ois) 
 	{		
 		try 
 		{
-			Singleton.addTratamiento(tratamiento, tratamientos);
+			Singleton.addTratamiento((Tratamiento)ois.readObject(), tratamientos);
 			pw.println("OK " + cont + " 200 " + port + " " + address);
 			pw.flush();
 		} 
