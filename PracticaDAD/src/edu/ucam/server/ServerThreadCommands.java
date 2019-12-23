@@ -117,7 +117,7 @@ public class ServerThreadCommands extends Thread{
 	}
 			
 			
-	void checkCommand(String message) {
+	private void checkCommand(String message) {
 		
 		message += " 1";
 		this.splitedMessage = message.split(" ");
@@ -347,7 +347,7 @@ public class ServerThreadCommands extends Thread{
 	}
 	
 	
-	void checkUser() {
+	private void checkUser() {
 		
 		switch (splitedMessage[0]) {
 		case "USER":
