@@ -8,7 +8,12 @@ public class GenerateMedicoId {
 	
 	public static String run(ArrayList<Medico> medicos) {
 		
-		return null;
+		String id = medicos.get(medicos.size()-1).getId();
+		Integer num = Integer.parseInt(id.substring(1));
+		
+		num++;
+		
+		return ("M"+num);
 	}
 	
 }

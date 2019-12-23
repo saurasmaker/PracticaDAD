@@ -7,6 +7,11 @@ import edu.ucam.pojos.Paciente;
 public class GeneratePacienteId{
 	public static String run(ArrayList<Paciente> pacientes) {
 		
-		return null;
+		String id = pacientes.get(pacientes.size()-1).getId();
+		Integer num = Integer.parseInt(id.substring(1));
+		
+		num++;
+		
+		return ("P"+num);
 	}
 }

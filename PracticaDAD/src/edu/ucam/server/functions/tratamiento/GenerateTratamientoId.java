@@ -7,6 +7,11 @@ import edu.ucam.pojos.Tratamiento;
 public class GenerateTratamientoId{
 	public static String run(ArrayList<Tratamiento> tratamientos) {
 		
-		return null;
+		String id = tratamientos.get(tratamientos.size()-1).getId();
+		Integer num = Integer.parseInt(id.substring(1));
+		
+		num++;
+		
+		return ("T"+num);
 	}
 }
