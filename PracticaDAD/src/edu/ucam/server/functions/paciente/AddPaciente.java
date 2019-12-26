@@ -13,7 +13,9 @@ public class AddPaciente implements Comando{
 	{		
 		try 
 		{
-			Singleton.addPaciente((Paciente)oisData.readObject(), pacientes);
+			Paciente paciente = (Paciente)oisData.readObject();
+			paciente.setId(GeneratePacienteId.run(pacientes));
+			Singleton.addPaciente(paciente, pacientes);
 			pwCommands.println("OK " + cont + " 200 " + port + " " + address);
 			pwCommands.flush();
 		} 

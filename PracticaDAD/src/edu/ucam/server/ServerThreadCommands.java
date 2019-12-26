@@ -46,7 +46,6 @@ public class ServerThreadCommands extends Thread{
 	private PrintWriter pw;
 	
 	private Integer cont = 0;
-	private String[] splitedMessage;
 	private String message;
 	
 	private ArrayList<Expediente> expedientes;
@@ -113,20 +112,47 @@ public class ServerThreadCommands extends Thread{
 	}
 			
 			
-	private void checkCommand(String message) {
+	private void checkCommand(String command) {
 		
-		message += " 1";
-		this.splitedMessage = message.split(" ");
+		switch (command) {
 		
-		switch (splitedMessage[0]) {
-		
-		case "USER"://///////////////////////
-			this.checkUser();
+		case "USER":
+			ServerDataChannel sdc1 = new ServerDataChannel();
+			
+			try {
+				String text = "";
+				if("admin".equals(text = sdc1.getBr().readLine())) {
+					pw.println("OK " + cont + " 200 " + text + " Envíe contraseña.");
+					pw.flush();
+					setUsered(true);
+				}
+				else {
+					pw.println("Failed " + cont + " 400" + " Not User.");
+					pw.flush();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			sdc1.closeChannel();
 			break;
 			
-		case "PASS"://///////////////////////
-			if(usered)
-				this.checkUser();
+		case "PASS":
+			ServerDataChannel sdc2 = new ServerDataChannel();
+			try {
+				String text = "";
+				if("admin".equals(text = sdc2.getBr().readLine())) {
+					pw.println("OK " + cont + " 200" + " Welcome " + text + ".");
+					pw.flush();
+					loged = true;
+				}
+				else {
+					pw.println("Failed " + cont + " 400 " + text + " Prueba de nuevo.");
+					pw.flush();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 			
 		case "ADDPACIENTE"://///////////////////////
@@ -190,27 +216,18 @@ public class ServerThreadCommands extends Thread{
 			break;
 			
 		case "ADDEXPEDIENTE"://///////////////////////
-			if(loged) {
-				AddExpediente.run(splitedMessage[1], splitedMessage[2], splitedMessage[3]/*idsTratamientos*/, pacientes, medicos, tratamientos, expedientes, cont, socket.getPort(), address, pw);
-			}
-			else this.userNotLoged();
+			
 			
 				
 			break;
 			
 		case "GETEXPEDIENTE"://///////////////////////
-			if(loged) {
-				GetExpediente.run(splitedMessage[1], expedientes, cont, address, socket.getPort(), pw);
-			}
-			else this.userNotLoged();
+			
 			
 			break;
 			
 		case "REMOVEEXPEDIENTE"://///////////////////////
-			if(loged) 
-				RemoveExpediente.run(splitedMessage[1], expedientes, cont, message, socket.getLocalPort(), pw); 
-			else 
-				this.userNotLoged();
+			
 			
 			break;
 		
@@ -368,43 +385,9 @@ public class ServerThreadCommands extends Thread{
 		
 		return;
 	}
-	
-	
-	private void checkUser() {
-		
-		switch (splitedMessage[0]) {
-		case "USER":
-			if(splitedMessage[1].equals("admin")) {
-				pw.println("OK " + cont + " 200 " + splitedMessage[1] + " Envíe contraseña.");
-				pw.flush();
-				usered = true;
-			}
-			else {
-				pw.println("Failed " + cont + " 400" + " Not User.");
-				pw.flush();
-			}
-			break;
-			
-		case "PASS":
-			if(splitedMessage[1].equals("admin")) {
-				pw.println("OK " + cont + " 200" + " Welcome " + splitedMessage[1] + ".");
-				pw.flush();
-				loged = true;
-			}
-			else {
-				pw.println("Failed " + cont + " 400 " + splitedMessage[1] + " Prueba de nuevo.");
-				pw.flush();
-			}
-			break;
-		}
-		
-		return;
-	}
-	
+
 	
 	public void setBridges() {
-		
-		
 		try {
 			this.setBr(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 			this.setPw(new PrintWriter(new OutputStreamWriter(socket.getOutputStream())));
@@ -539,6 +522,16 @@ public class ServerThreadCommands extends Thread{
 
 	public void setTratamientos(ArrayList<Tratamiento> tratamientos) {
 		this.tratamientos = tratamientos;
+	}
+
+
+	public Boolean getUsered() {
+		return usered;
+	}
+
+
+	public void setUsered(Boolean usered) {
+		this.usered = usered;
 	}
 	
 		

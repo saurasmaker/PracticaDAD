@@ -13,7 +13,9 @@ public class AddTratamiento implements Comando{
 	{		
 		try 
 		{
-			Singleton.addTratamiento((Tratamiento)ois.readObject(), tratamientos);
+			Tratamiento tratamiento = (Tratamiento)ois.readObject();
+			tratamiento.setId(GenerateTratamientoId.run(tratamientos));
+			Singleton.addTratamiento(tratamiento, tratamientos);
 			pw.println("OK " + cont + " 200 " + port + " " + address);
 			pw.flush();
 		} 

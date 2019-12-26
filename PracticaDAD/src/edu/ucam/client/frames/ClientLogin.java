@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 
+import edu.ucam.client.ClientDataChannel;
 import edu.ucam.client.ClientThreadCommands;
 
 import java.awt.event.KeyAdapter;
@@ -237,10 +238,23 @@ public class ClientLogin extends JFrame {
 		
 		if(checkData()) {
 			try {
-				this.pw.println("USER " + this.textFieldUserName.getText());
+				ClientDataChannel cdc;
+				
+				this.pw.println("USER");
 				pw.flush();
-				this.pw.println("PASS " + String.valueOf(this.passwordField.getPassword()));
+				cdc = new ClientDataChannel();
+				cdc.getPw().println(this.textFieldUserName.getText());
+				cdc.getPw().flush();
+				cdc.closeChannel();
+				
+				
+				
+				this.pw.println("PASS");
 				pw.flush();
+				cdc = new ClientDataChannel();
+				cdc.getPw().println(String.valueOf(this.passwordField.getPassword()));
+				cdc.getPw().flush();
+				cdc.closeChannel();
 			}
 			catch(Exception t) {
 			

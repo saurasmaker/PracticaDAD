@@ -10,8 +10,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
+import edu.ucam.client.ClientDataChannel;
 import edu.ucam.pojos.Medico;
-import edu.ucam.server.ServerDataChannel;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
@@ -31,16 +31,17 @@ public class AnadirMedico extends JInternalFrame {
 	
 	private JComponent Barra = ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).getNorthPane();
 	private Dimension dimensionBarra = null;
-	private PrintWriter pw;
+	private PrintWriter pwCommands;
 	
 	private JTextField textFieldNombre;
 	private JTextField textFieldApellidos;
-	private JComboBox comboBoxEspecialidad;
+	private JComboBox<String> comboBoxEspecialidad;
 
 	/**
 	 * Create the frame.
 	 */
-	public AnadirMedico() {
+	public AnadirMedico(PrintWriter pwCommands) {
+		this.setPwCommands(pwCommands);
 		setBounds(100, 100, 483, 295);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
@@ -64,7 +65,7 @@ public class AnadirMedico extends JInternalFrame {
 		JLabel lblNewLabelEspecialidad = new JLabel("Especialidad:\r\n");
 		lblNewLabelEspecialidad.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		
-		comboBoxEspecialidad = new JComboBox();
+		comboBoxEspecialidad = new JComboBox<String>();
 		
 		JButton btnNewButtonAnadir = new JButton("A\u00F1adir");
 		btnNewButtonAnadir.addActionListener(new ActionListener() {
@@ -78,8 +79,6 @@ public class AnadirMedico extends JInternalFrame {
 		JButton btnNewButtonCancelar = new JButton("Cancelar");
 		btnNewButtonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				cancelAddMedico();
 				dispose();
 			}
 		});
@@ -143,7 +142,7 @@ public class AnadirMedico extends JInternalFrame {
 	private void sendData() {
 		
 		Medico medico = new Medico();
-		ServerDataChannel sdc = new ServerDataChannel();
+		ClientDataChannel cdc = new ClientDataChannel();
 		
 		if(checkData()) {
 			
@@ -152,9 +151,9 @@ public class AnadirMedico extends JInternalFrame {
 			medico.setEspecialidad(comboBoxEspecialidad.getSelectedItem().toString());
 			
 			try {
-				this.pw.println("ADDMEDICO");
-				this.pw.flush();
-				sdc.getOos().writeObject(medico);
+				this.pwCommands.println("ADDMEDICO");
+				this.pwCommands.flush();
+				cdc.getOos().writeObject(medico);
 			}
 			catch(Exception t) {
 			
@@ -167,18 +166,8 @@ public class AnadirMedico extends JInternalFrame {
 		return;
 	}
 	
-	private void cancelAddMedico() {
-		try {
-			this.pw.println("EXIT ADD MEDICO");
-			pw.flush();
-		}
-		catch(Exception t) {
-		
-		}
-	}
 	
 	private Boolean checkData() {
-		JComboBox comboBoxEspecialidad = new JComboBox();
 		if(textFieldNombre.getText() == null) {
 			JOptionPane.showMessageDialog(null,"You must complete user name field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
@@ -203,12 +192,12 @@ public class AnadirMedico extends JInternalFrame {
 	public void setDimensionBarra(Dimension dimensionBarra) {
 		this.dimensionBarra = dimensionBarra;
 	}
-	
-	public PrintWriter getPw() {
-		return pw;
+
+	public PrintWriter getPwCommands() {
+		return pwCommands;
 	}
 
-	public void setPw(PrintWriter pw) {
-		this.pw = pw;
+	public void setPwCommands(PrintWriter pwCommands) {
+		this.pwCommands = pwCommands;
 	}
 }

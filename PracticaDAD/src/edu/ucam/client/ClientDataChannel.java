@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ClientDataChannel{
@@ -17,9 +16,8 @@ public class ClientDataChannel{
 	private BufferedReader br;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-	private ServerSocket serverSocket;
 	private Socket socket;
-	public Integer port = 2021;
+	public Integer port = 2022;
 	
 	
 	//Constructors
@@ -33,9 +31,7 @@ public class ClientDataChannel{
 	private void setConnection() {
 		
 		try {
-			serverSocket = new ServerSocket(port);
-			socket = serverSocket.accept();	
-			setBridges();
+			socket = new Socket("localhost", port);	
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,6 +76,17 @@ public class ClientDataChannel{
 		}
 		
 		return object;
+	}
+	
+	public void closeChannel() {
+		
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return;
 	}
 	
 	//Getters & Setters

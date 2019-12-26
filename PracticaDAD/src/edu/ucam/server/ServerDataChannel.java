@@ -19,7 +19,7 @@ public class ServerDataChannel{
 	private ObjectInputStream ois;
 	private ServerSocket serverSocket;
 	private Socket socket;
-	private Integer port = 2021;
+	private Integer port = 2022;
 	
 	
 	//Constructors
@@ -34,8 +34,9 @@ public class ServerDataChannel{
 		
 		try {
 			serverSocket = new ServerSocket(port);
+			System.out.println("waiting for client...");
 			socket = serverSocket.accept();	
-			setBridges();
+			System.out.println("connected");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,6 +81,17 @@ public class ServerDataChannel{
 		}
 		
 		return object;
+	}
+	
+	public void closeChannel() {
+		
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return;
 	}
 	
 	//Getters & Setters

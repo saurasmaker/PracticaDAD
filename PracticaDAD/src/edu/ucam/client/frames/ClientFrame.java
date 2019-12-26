@@ -4,14 +4,21 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import edu.ucam.client.ClientDataChannel;
 import edu.ucam.client.ClientThreadCommands;
+import edu.ucam.pojos.Medico;
+import edu.ucam.pojos.Paciente;
+import edu.ucam.pojos.Tratamiento;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+
+import java.io.IOException;
 import java.io.PrintWriter;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JDesktopPane;
@@ -36,6 +43,8 @@ public class ClientFrame extends JFrame {
 	private JPanel contentPane;
 	private PrintWriter pw;
 	private ClientThreadCommands clientThreadCommands;
+	
+	private JEditorPane editorPaneData;
 	
 	//Constructor
 	public ClientFrame(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
@@ -87,7 +96,15 @@ public class ClientFrame extends JFrame {
 		mnPacientes.add(mntmActualizarPaciente);
 		
 		JMenuItem mntmMostrarPaciente = new JMenuItem("Mostrar");
+		mnPacientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ClientDataChannel cdc = new ClientDataChannel();
+				Paciente paciente = (Paciente)cdc.readObject();
+				mostrarPaciente(paciente);
+			}
+		});
 		mnPacientes.add(mntmMostrarPaciente);
+		
 		
 		JMenuItem mntmEliminarPaciente = new JMenuItem("Eliminar");
 		mnPacientes.add(mntmEliminarPaciente);
@@ -104,7 +121,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmAnadirMedico = new JMenuItem("A\u00F1adir");
 		mntmAnadirMedico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AnadirMedico anadirMedico = new AnadirMedico(); 
+				AnadirMedico anadirMedico = new AnadirMedico(pw); 
 				desktopPane.add(anadirMedico);
 				try {
 					anadirMedico.setMaximum(true);
@@ -120,6 +137,17 @@ public class ClientFrame extends JFrame {
 		mnMedicos.add(menuActualizarMedico);
 		
 		JMenuItem mntmMostrarMedico = new JMenuItem("Mostrar");
+		mntmMostrarMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ClientDataChannel cdc = new ClientDataChannel();
+				cdc.getPw().println(JOptionPane.showInputDialog("Introduce el ID del medico a mostrar:"));
+				try {
+					mostrarMedico((Medico)cdc.getOis().readObject());
+				} catch (ClassNotFoundException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		mnMedicos.add(mntmMostrarMedico);
 		
 		JMenuItem mntmEliminarMedico = new JMenuItem("Eliminar");
@@ -240,7 +268,7 @@ public class ClientFrame extends JFrame {
 				.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
 		);
 		
-		JEditorPane editorPaneData = new JEditorPane();
+		editorPaneData = new JEditorPane();
 		scrollPane_1.setViewportView(editorPaneData);
 		panelData.setLayout(gl_panelData);
 		
@@ -269,6 +297,32 @@ public class ClientFrame extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 	}
 
+	
+	//Methods
+	void mostrarPaciente(Paciente paciente) {
+	
+		editorPaneData.setText(" >Paciente: " + paciente.getId() + "\n\t-Nombre: "+paciente.getNombre()
+		+ "\n\t-Apellidos: "+paciente.getApellidos()
+		+ "\n\t-Fecha nacimiento: "+paciente.getFechaNacimiento());
+		
+		return;
+	}
+	
+	void mostrarMedico(Medico medico) {
+		
+		editorPaneData.setText(" >Medico: " + medico.getId() + "\n\t-Nombre: "+medico.getNombre()
+		+ "\n\t-Apellidos: "+medico.getApellidos()
+		+ "\n\t-Especialidad: "+medico.getEspecialidad());
+		
+		return;
+	}
+	
+	void mostrarMedico(Tratamiento tratamiento) {
+		
+		editorPaneData.setText(" >Medico: " + tratamiento.getId() + "\n\t-Nombre: "+tratamiento.getDescripcion());
+		
+		return;
+	}
 	
 	//Getters & Setters
 	public PrintWriter getPw() {
