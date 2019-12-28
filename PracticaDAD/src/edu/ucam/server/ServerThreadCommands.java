@@ -117,11 +117,11 @@ public class ServerThreadCommands extends Thread{
 		switch (command) {
 		
 		case "USER":
-			ServerDataChannel sdc1 = new ServerDataChannel();
 			
 			try {
+				ServerDataChannel sdc = new ServerDataChannel();
 				String text = "";
-				if("admin".equals(text = sdc1.getBr().readLine())) {
+				if("admin".equals(text = sdc.getBr().readLine())) {
 					pw.println("OK " + cont + " 200 " + text + " Envíe contraseña.");
 					pw.flush();
 					setUsered(true);
@@ -130,17 +130,20 @@ public class ServerThreadCommands extends Thread{
 					pw.println("Failed " + cont + " 400" + " Not User.");
 					pw.flush();
 				}
+				
+				sdc.closeChannel();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			sdc1.closeChannel();
+			
 			break;
 			
 		case "PASS":
-			ServerDataChannel sdc2 = new ServerDataChannel();
+			
 			try {
+				ServerDataChannel sdc = new ServerDataChannel();
 				String text = "";
-				if("admin".equals(text = sdc2.getBr().readLine())) {
+				if("admin".equals(text = sdc.getBr().readLine())) {
 					pw.println("OK " + cont + " 200" + " Welcome " + text + ".");
 					pw.flush();
 					loged = true;
@@ -149,6 +152,8 @@ public class ServerThreadCommands extends Thread{
 					pw.println("Failed " + cont + " 400 " + text + " Prueba de nuevo.");
 					pw.flush();
 				}
+				
+				sdc.closeChannel();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

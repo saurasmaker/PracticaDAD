@@ -17,8 +17,7 @@ public class ClientThreadCommands extends Thread{
 	private BufferedReader br;
 	private PrintWriter pw;
 	private Boolean suspended = false, paused = false, loged = false, usered = false;
-	private String message;
-	private String[] splitedMessage;
+	private String command;
 	
 	private Integer cont = 0;
 	
@@ -58,14 +57,14 @@ public class ClientThreadCommands extends Thread{
 	
 	public void readMessage() {
 		
-		setMessage(null);
+		command = "";
 		try {
-			setMessage(this.br.readLine());
+			command = (this.br.readLine());
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		
-		checkCommand(message);
+		checkCommand(command);
 		
 		return;
 	}
@@ -74,13 +73,28 @@ public class ClientThreadCommands extends Thread{
 		
 		switch (command) {
 		
-		case "USER"://///////////////////////
-			this.checkUser();
+		case "USER"://////////////////////////////////////////////////////
+			if(command.equals("admin")) {
+				pw.println("OK " + cont + " 200 " + command + " Envíe contraseña.");
+				pw.flush();
+				setUsered(true);
+			}
+			else {
+				pw.println("Failed " + cont + " 400" + " Not User.");
+				pw.flush();
+			}
 			break;
 			
-		case "PASS"://///////////////////////
-			if(usered)
-				this.checkUser();
+		case "PASS"://////////////////////////////////////////////////////
+			if(command.equals("admin")) {
+				pw.println("OK " + cont + " 200" + " Welcome " + command + ".");
+				pw.flush();
+				loged = true;
+			}
+			else {
+				pw.println("Failed " + cont + " 400 " + command + " Prueba de nuevo.");
+				pw.flush();
+			}
 			break;
 			
 		case "ADDPACIENTE"://///////////////////////
@@ -219,38 +233,6 @@ public class ClientThreadCommands extends Thread{
 		return;
 	}
 	
-	
-	private void checkUser() {
-		
-		switch (splitedMessage[0]) {
-		case "USER":
-			if(splitedMessage[1].equals("admin")) {
-				pw.println("OK " + cont + " 200 " + splitedMessage[1] + " Envíe contraseña.");
-				pw.flush();
-				usered = true;
-			}
-			else {
-				pw.println("Failed " + cont + " 400" + " Not User.");
-				pw.flush();
-			}
-			break;
-			
-		case "PASS":
-			if(splitedMessage[1].equals("admin")) {
-				pw.println("OK " + cont + " 200" + " Welcome " + splitedMessage[1] + ".");
-				pw.flush();
-				loged = true;
-			}
-			else {
-				pw.println("Failed " + cont + " 400 " + splitedMessage[1] + " Prueba de nuevo.");
-				pw.flush();
-			}
-			break;
-		}
-		
-		return;
-	}
-	
 	public void userNotLoged() {
 		pw.println("USER NOT LOGED");
 		pw.flush();
@@ -259,21 +241,21 @@ public class ClientThreadCommands extends Thread{
 	
 	public void checkLoged() {
 		
-		System.out.println(this.getMessage());
+		System.out.println(this.command);
 		
 		if(!loged) {
 			try {
-				if(this.getMessage().split(" ")[4].equals("admin.")) {
+				if(this.command.split(" ")[4].equals("admin.")) {
 					System.out.println("yas");
 					loged = true;
 					clientLogin.dispose();
 					openClientFrame();
 					return;
 				}
-				else if(this.getMessage().split(" ")[4].equals("User."))
+				else if(this.command.split(" ")[4].equals("User."))
 					JOptionPane.showMessageDialog(null, "Usuario incorrecto.");
 			
-				else if(this.getMessage().split(" ")[6].equals("nuevo.")) 
+				else if(this.command.split(" ")[6].equals("nuevo.")) 
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta.");
 				}
 			catch(Exception t) {
@@ -299,6 +281,9 @@ public class ClientThreadCommands extends Thread{
 			}
 		});/************************************************************************************/
 	}
+	
+	
+	
 	
 	//Getters & Setters
 	public Boolean isPaused() {
@@ -340,12 +325,13 @@ public class ClientThreadCommands extends Thread{
 	}
 
 
-	public String getMessage() {
-		return message;
+
+	public Boolean getUsered() {
+		return usered;
 	}
 
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setUsered(Boolean usered) {
+		this.usered = usered;
 	}
 }

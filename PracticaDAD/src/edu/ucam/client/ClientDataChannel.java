@@ -82,6 +82,7 @@ public class ClientDataChannel{
 		
 		try {
 			socket.close();
+			System.out.println("cerrado");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

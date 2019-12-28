@@ -87,6 +87,7 @@ public class ServerDataChannel{
 		
 		try {
 			socket.close();
+			System.out.println("Cerrado");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

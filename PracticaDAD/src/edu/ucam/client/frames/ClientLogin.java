@@ -247,8 +247,6 @@ public class ClientLogin extends JFrame {
 				cdc.getPw().flush();
 				cdc.closeChannel();
 				
-				
-				
 				this.pw.println("PASS");
 				pw.flush();
 				cdc = new ClientDataChannel();
