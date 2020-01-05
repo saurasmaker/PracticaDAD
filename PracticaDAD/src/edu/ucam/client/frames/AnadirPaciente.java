@@ -42,12 +42,13 @@ public class AnadirPaciente extends JInternalFrame {
 	private JComponent Barra = ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).getNorthPane();
 	private Dimension dimensionBarra = null;
 	private PrintWriter pw;
-	
+	private Integer dataPort;
 	
 	/**
 	 * Create the frame.
 	 */
-	public AnadirPaciente() {
+	public AnadirPaciente(Integer dataPort) {
+		this.dataPort = dataPort;
 		setBounds(100, 100, 483, 291);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
@@ -173,7 +174,7 @@ public class AnadirPaciente extends JInternalFrame {
 	private void sendData() {
 		
 		Paciente paciente = new Paciente();
-		ServerDataChannel sdc = new ServerDataChannel();
+		ServerDataChannel sdc = new ServerDataChannel(dataPort);
 		Date date = null;
 		
 		try {

@@ -53,6 +53,8 @@ public class ServerThreadCommands extends Thread{
 	private ArrayList<Medico> medicos;
 	private ArrayList<Tratamiento> tratamientos;
 	
+	private Integer dataPort = 2021;
+	
 	private Boolean suspended = false, paused = false, usered = false, loged = false;
 	
 	//Constructors
@@ -119,7 +121,7 @@ public class ServerThreadCommands extends Thread{
 		case "USER":
 			
 			try {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				String text = "";
 				if("admin".equals(text = sdc.getBr().readLine())) {
 					pw.println("OK " + cont + " 200 " + text + " Envíe contraseña.");
@@ -136,12 +138,14 @@ public class ServerThreadCommands extends Thread{
 				e.printStackTrace();
 			}
 			
+			++dataPort;
+			
 			break;
 			
 		case "PASS":
 			
 			try {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				String text = "";
 				if("admin".equals(text = sdc.getBr().readLine())) {
 					pw.println("OK " + cont + " 200" + " Welcome " + text + ".");
@@ -158,66 +162,83 @@ public class ServerThreadCommands extends Thread{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			++dataPort;
+			
 			break;
 			
 		case "ADDPACIENTE"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				AddPaciente.run(pacientes, cont, socket.getPort(), message, pw, sdc.getOis());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 		
 		case "UPDATEPACIENTE"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				UpdatePaciente.run(pacientes, cont, socket.getPort(), address, pw, sdc.getOis());	
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "GETPACIENTE"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				GetPaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
 			}
 			
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "REMOVEPACIENTE"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				RemovePaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getBr());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "LISTPACIENTES"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				ListPacientes.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 			
 			else 
 				this.userNotLoged();
+			
+			++dataPort;
+			
 			break;
 			
 		case "COUNTPACIENTES"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				CountPacientes.run(pacientes, cont, message, socket.getLocalPort(), pw, sdc.getPw()); 
 			}
 			else 
 				this.userNotLoged();
+			
+			++dataPort;
+			
 			break;
 			
 		case "ADDEXPEDIENTE"://///////////////////////
@@ -260,104 +281,127 @@ public class ServerThreadCommands extends Thread{
 			
 		case "ADDMEDICO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				AddMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis()); 
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "UPDATEMEDICO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				UpdateMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis()); 
 			}
 			else 
 				this.userNotLoged();
+			
+			++dataPort;
+			
 			break;
 			
 		case "GETMEDICO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				GetMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "REMOVEMEDICO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				RemoveMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getBr());
 			}
 			else 
 				this.userNotLoged();
+			
+			++dataPort;
+			
 			break;
 			
 		case "LISTMEDICOS"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				ListMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 			else 
 				this.userNotLoged();
+			
+			++dataPort;
+			
 			break;
 			
 		case "COUNTMEDICOS"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				CountMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getPw());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "ADDTRATAMIENTO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				AddTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "UPDATETRATAMIENTO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				UpdateTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "GETTRATAMIENTO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				GetTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "REMOVETRATAMIENTO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				RemoveTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
 			}
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "LISTTRATAMIENTOS"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				ListTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 				
@@ -365,15 +409,20 @@ public class ServerThreadCommands extends Thread{
 			else 
 				this.userNotLoged();
 			
+			++dataPort;
+			
 			break;
 			
 		case "COUNTTRATAMIENTOS"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel();
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				CountTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getPw());
 			}
 			else 
 				this.userNotLoged();
+			
+			++dataPort;
+			
 			break;
 			
 		case "EXIT"://///////////////////////

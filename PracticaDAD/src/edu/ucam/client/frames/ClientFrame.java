@@ -78,7 +78,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmAnadirPaciente = new JMenuItem("A\u00F1adir");
 		mntmAnadirPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AnadirPaciente anadirPaciente = new AnadirPaciente(); 
+				AnadirPaciente anadirPaciente = new AnadirPaciente(dataPort); 
 				desktopPane.add(anadirPaciente);
 				try {
 					anadirPaciente.setMaximum(true);
@@ -168,7 +168,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmAnadirTratamiento = new JMenuItem("A\u00F1adir");
 		mntmAnadirTratamiento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AnadirTratamiento anadirTratamiento = new AnadirTratamiento(); 
+				AnadirTratamiento anadirTratamiento = new AnadirTratamiento(dataPort); 
 				desktopPane.add(anadirTratamiento);
 				try {
 					anadirTratamiento.setMaximum(true);

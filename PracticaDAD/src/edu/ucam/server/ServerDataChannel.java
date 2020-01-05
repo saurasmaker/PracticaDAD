@@ -19,11 +19,12 @@ public class ServerDataChannel{
 	private ObjectInputStream ois;
 	private ServerSocket serverSocket;
 	private Socket socket;
-	private Integer port = 2022;
+	private Integer dataPort = 2021;
 	
 	
 	//Constructors
-	public ServerDataChannel() {
+	public ServerDataChannel(Integer dataPort) {
+		this.dataPort = dataPort;
 		this.setConnection();
 		this.setBridges();
 	}
@@ -33,7 +34,7 @@ public class ServerDataChannel{
 	private void setConnection() {
 		
 		try {
-			serverSocket = new ServerSocket(port);
+			serverSocket = new ServerSocket(dataPort);
 			System.out.println("waiting for client...");
 			socket = serverSocket.accept();	
 			System.out.println("connected");

@@ -38,11 +38,13 @@ public class AnadirTratamiento extends JInternalFrame {
 	private JTextArea textAreaDescripcion;
 	private Dimension dimensionBarra = null;
 	private PrintWriter pw;
+	private Integer dataPort;
 	
 	/**
 	 * Create the frame.
 	 */
-	public AnadirTratamiento() {
+	public AnadirTratamiento(Integer dataPort) {
+		this.setDataPort(dataPort);
 		setBounds(100, 100, 483, 343);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
@@ -122,7 +124,7 @@ public class AnadirTratamiento extends JInternalFrame {
 	private void sendData() {
 		
 		Tratamiento tratamiento = new Tratamiento();
-		ServerDataChannel sdc = new ServerDataChannel();
+		ServerDataChannel sdc = new ServerDataChannel(dataPort);
 		
 		if(checkData()) {
 			
@@ -177,5 +179,13 @@ public class AnadirTratamiento extends JInternalFrame {
 
 	public void setPw(PrintWriter pw) {
 		this.pw = pw;
+	}
+
+	public Integer getDataPort() {
+		return dataPort;
+	}
+
+	public void setDataPort(Integer dataPort) {
+		this.dataPort = dataPort;
 	}
 }
