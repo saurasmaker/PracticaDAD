@@ -78,7 +78,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmAnadirPaciente = new JMenuItem("A\u00F1adir");
 		mntmAnadirPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AnadirPaciente anadirPaciente = new AnadirPaciente(dataPort); 
+				AnadirPaciente anadirPaciente = new AnadirPaciente(pw, clientThreadCommands); 
 				desktopPane.add(anadirPaciente);
 				try {
 					anadirPaciente.setMaximum(true);
@@ -99,11 +99,26 @@ public class ClientFrame extends JFrame {
 		mnPacientes.add(mntmActualizarPaciente);
 		
 		JMenuItem mntmMostrarPaciente = new JMenuItem("Mostrar");
-		mnPacientes.addActionListener(new ActionListener() {
+		mntmMostrarPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ClientDataChannel cdc = new ClientDataChannel(dataPort);
+				System.out.println("hola");
+				
+				//Envio comando
+				pw.println("GETPACIENTE");
+				pw.flush();
+				
+				//Lectura Id
+				String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a actualizar: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				cdc.getPw().println(idPaciente);
+				cdc.getPw().flush();
+
+				//Lectura objeto
 				Paciente paciente = (Paciente)cdc.readObject();
 				mostrarPaciente(paciente);
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 		});
 		mnPacientes.add(mntmMostrarPaciente);

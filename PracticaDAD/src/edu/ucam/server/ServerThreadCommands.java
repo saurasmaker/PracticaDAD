@@ -59,7 +59,10 @@ public class ServerThreadCommands extends Thread{
 	
 	//Constructors
 	public ServerThreadCommands(Integer ID, Socket socket, ArrayList<Expediente> expedientes, ArrayList<Paciente> pacientes, ArrayList<Medico> medicos, ArrayList<Tratamiento> tratamientos) {
-		
+		this.expedientes = expedientes;
+		this.pacientes = pacientes;
+		this.medicos = medicos;
+		this.tratamientos = tratamientos;
 		this.setExpedientes(expedientes);
 		this.setSocket(socket);
 		System.out.println("SOCKET establecido.");
@@ -98,19 +101,24 @@ public class ServerThreadCommands extends Thread{
 			
 			
 			//Cuerpo
-			try {
-				message = this.getBr().readLine();
-				System.out.println("Mensaje recibido: " + message);
-				this.checkCommand(message);
-				++cont;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			
-			
+			readCommand();
+
 		}
 		
+	}
+	
+	private void readCommand() {
+		
+		try {
+			message = this.getBr().readLine();
+			System.out.println("Comando recibido: " + message);
+			this.checkCommand(message);
+			++cont;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return;
 	}
 			
 			
@@ -123,6 +131,7 @@ public class ServerThreadCommands extends Thread{
 			try {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				String text = "";
+				
 				if("admin".equals(text = sdc.getBr().readLine())) {
 					pw.println("OK " + cont + " 200 " + text + " Envíe contraseña.");
 					pw.flush();
@@ -131,9 +140,11 @@ public class ServerThreadCommands extends Thread{
 				else {
 					pw.println("Failed " + cont + " 400" + " Not User.");
 					pw.flush();
+					//readCommand();
 				}
 				
 				sdc.closeChannel();
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -171,6 +182,7 @@ public class ServerThreadCommands extends Thread{
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				AddPaciente.run(pacientes, cont, socket.getPort(), message, pw, sdc.getOis());
+
 			}
 			else 
 				this.userNotLoged();

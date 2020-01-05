@@ -33,7 +33,9 @@ public class ClientMain{
 		
 		
 		//Ejecutamos ventana de Login****************************/
-		ClientLogin login = new ClientLogin(pw, clientThreadCommands, dataPort);
+		ClientLogin login = new ClientLogin(pw, clientThreadCommands);
+		clientThreadCommands = new ClientThreadCommands(login, br, pw, dataPort);
+		login.setClientThreadCommands(clientThreadCommands);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -46,7 +48,6 @@ public class ClientMain{
 		
 
 		//Ejecutamos el hilo que escuchará al servidor******************************************/
-		clientThreadCommands = new ClientThreadCommands(login, br, pw, dataPort);
 		clientThreadCommands.run();	
 	}
 }

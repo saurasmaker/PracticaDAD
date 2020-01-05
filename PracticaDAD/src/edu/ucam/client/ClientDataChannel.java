@@ -44,6 +44,7 @@ public class ClientDataChannel{
 	private void setBridges() {
 		
 		try {
+			//this.setOos(new ObjectOutputStream(socket.getOutputStream()));
 			this.setBr(new BufferedReader(new InputStreamReader(socket.getInputStream())));
 			this.setPw(new PrintWriter(new OutputStreamWriter(socket.getOutputStream())));
 		} catch (IOException e) {
@@ -83,7 +84,7 @@ public class ClientDataChannel{
 		
 		try {
 			socket.close();
-			System.out.println("cerrado");
+			System.out.println("cerrado " + socket.getPort());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -129,5 +130,17 @@ public class ClientDataChannel{
 
 	public void setOos(ObjectOutputStream oos) {
 		this.oos = oos;
-	}	
+	}
+
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
+	
+	
 }

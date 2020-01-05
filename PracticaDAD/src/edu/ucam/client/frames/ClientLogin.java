@@ -57,10 +57,9 @@ public class ClientLogin extends JFrame {
 	private ClientThreadCommands clientThreadCommands;
 	private PrintWriter pw;
 	private Integer xMouse, yMouse;
-	private Integer port;
 	
 	//Constructors
-	public ClientLogin(PrintWriter pw, ClientThreadCommands clientThreadCommands, Integer port) {
+	public ClientLogin(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
 		this.setPw(pw);
 		this.setClientThreadCommands(clientThreadCommands);
 		
@@ -99,8 +98,10 @@ public class ClientLogin extends JFrame {
 		passwordField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					sendData();
+					System.out.println("sended");
+				}
 			}
 		});
 		this.passwordField.setBounds(35, 162, 237, 20);
@@ -243,23 +244,28 @@ public class ClientLogin extends JFrame {
 				
 				this.pw.println("USER");
 				pw.flush();
-				cdc = new ClientDataChannel(port);
+				System.out.println(clientThreadCommands.getDataPort());
+				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				cdc.getPw().println(this.textFieldUserName.getText());
 				cdc.getPw().flush();
 				cdc.closeChannel();
-				++port;
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+				
 				this.pw.println("PASS");
 				pw.flush();
-				cdc = new ClientDataChannel(port);
+				System.out.println(clientThreadCommands.getDataPort());
+				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				cdc.getPw().println(String.valueOf(this.passwordField.getPassword()));
 				cdc.getPw().flush();
 				cdc.closeChannel();
-				++port;
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 			catch(Exception t) {
 			
 			}
 		}
+		
+		
 		
 		return;
 	}
@@ -271,7 +277,6 @@ public class ClientLogin extends JFrame {
 			clientThreadCommands.setSuspended(true);
 		}
 		catch(Exception t) {
-		
 		}
 	}
 	
@@ -323,12 +328,5 @@ public class ClientLogin extends JFrame {
 		this.clientThreadCommands = clientThreadCommands;
 	}
 
-	public Integer getPort() {
-		return port;
-	}
-
-	public void setPort(Integer port) {
-		this.port = port;
-	}	
 	
 }

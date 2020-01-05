@@ -17,7 +17,7 @@ public class ClientThreadCommands extends Thread{
 	private BufferedReader br;
 	private PrintWriter pw;
 	private Boolean suspended = false, paused = false, loged = false, usered = false;
-	private String command;
+	private String message;
 	private Integer dataPort;
 	private Integer cont = 0;
 	
@@ -32,7 +32,9 @@ public class ClientThreadCommands extends Thread{
 	
 	//Methods
 	public void run() {
-				
+			
+		int cont = 0;
+		
 		while(!paused) {
 			
 			//Control del bucle
@@ -48,217 +50,65 @@ public class ClientThreadCommands extends Thread{
 				e.printStackTrace();
 			}/*************************************/
 			
-			
 			//Cuerpo
 			readMessage();
-			
+			System.out.println(message + " " + cont);
+			++cont;
 		}
 		
 	}
 	
 	public void readMessage() {
 		
-		command = "";
+		setMessage("");
 		try {
-			command = (this.br.readLine());
+			setMessage((this.br.readLine()));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		
-		checkCommand(command);
+		checkLoged();
 		
 		return;
 	}
 	
-	private void checkCommand(String command) {
-		
-		switch (command) {
-		
-		case "USER"://////////////////////////////////////////////////////
-			if(command.equals("admin")) {
-				pw.println("OK " + cont + " 200 " + command + " Envíe contraseña.");
-				pw.flush();
-				setUsered(true);
-			}
-			else {
-				pw.println("Failed " + cont + " 400" + " Not User.");
-				pw.flush();
-			}
-			break;
-			
-		case "PASS"://////////////////////////////////////////////////////
-			if(command.equals("admin")) {
-				pw.println("OK " + cont + " 200" + " Welcome " + command + ".");
-				pw.flush();
-				loged = true;
-			}
-			else {
-				pw.println("Failed " + cont + " 400 " + command + " Prueba de nuevo.");
-				pw.flush();
-			}
-			break;
-			
-		case "ADDPACIENTE"://///////////////////////
-			
-			
-			break;
-		
-		case "UPDATEPACIENTE"://///////////////////////
-			
-			
-			break;
-			
-		case "GETPACIENTE"://///////////////////////
-			
-			
-			break;
-			
-		case "REMOVEPACIENTE"://///////////////////////
-		
-			
-			break;
-			
-		case "LISTPACIENTES"://///////////////////////
-			
-			break;
-			
-		case "COUNTPACIENTES"://///////////////////////
-			
-			break;
-			
-		case "ADDEXPEDIENTE"://///////////////////////
-			
-			
-				
-			break;
-			
-		case "GETEXPEDIENTE"://///////////////////////
-			
-			
-			break;
-			
-		case "REMOVEEXPEDIENTE"://///////////////////////
-			
-			
-			break;
-		
-		case "LISTEXPEDIENTES"://///////////////////////
-			
-			break;
-			
-		case "ADDPACIENTE2EXP"://///////////////////////
-			break;
-			
-		case "REMOVEPACIENTEFROMEXP"://///////////////////////
-			break;
-			
-		case "ADDMEDICO2EXP"://///////////////////////
-			break;
-			
-		case "REMOVEMEDICOFROMEXP"://///////////////////////
-			break;
-			
-		case "ADDTRATAM2EXP"://///////////////////////
-			break;
-			
-		case "REMOVETRATAMFROMEXP"://///////////////////////
-			break;
-			
-		case "ADDMEDICO"://///////////////////////
-			
-			
-			break;
-			
-		case "UPDATEMEDICO"://///////////////////////
-			
-			break;
-			
-		case "GETMEDICO"://///////////////////////
-			
-			
-			break;
-			
-		case "REMOVEMEDICO"://///////////////////////
-			
-			break;
-			
-		case "LISTMEDICOS"://///////////////////////
-			
-			break;
-			
-		case "COUNTMEDICOS"://///////////////////////
-			
-			
-			break;
-			
-		case "ADDTRATAMIENTO"://///////////////////////
-			
-			
-			break;
-			
-		case "UPDATETRATAMIENTO"://///////////////////////
-			
-			
-			break;
-			
-		case "GETTRATAMIENTO"://///////////////////////
-			
-			
-			break;
-			
-		case "REMOVETRATAMIENTO"://///////////////////////
-			
-			
-			break;
-			
-		case "LISTTRATAMIENTOS"://///////////////////////
-			
-			
-			break;
-			
-		case "COUNTTRATAMIENTOS"://///////////////////////
-			
-			break;
-			
-		case "EXIT"://///////////////////////
-			
-			break;
-			
-		default://///////////////////////
-			pw.println("Command not found");
-			pw.flush();
-			break;
-			
-		}
-		
-		return;
-	}
-	
-	public void userNotLoged() {
-		pw.println("USER NOT LOGED");
-		pw.flush();
-		return;
-	}
 	
 	public void checkLoged() {
 		
-		System.out.println(this.command);
+		//System.out.println(this.message);
 		
-		if(!loged) {
+		if(!usered & !loged) {
 			try {
-				if(this.command.split(" ")[4].equals("admin.")) {
-					System.out.println("yas");
+				if(this.message.split(" ")[0].equals("OK")) {
+					System.out.println("usered");
+					usered = true;
+					return;
+				}
+			
+				else {
+					JOptionPane.showMessageDialog(null, "Usuario incorrecta.");
+				}
+			}
+			catch(Exception t) {
+				
+			}
+		}
+		
+		else if(!loged) {
+			try {
+				if(this.message.split(" ")[0].equals("OK")) {
+					System.out.println("loged");
 					loged = true;
 					clientLogin.dispose();
 					openClientFrame();
 					return;
 				}
-				else if(this.command.split(" ")[4].equals("User."))
-					JOptionPane.showMessageDialog(null, "Usuario incorrecto.");
-			
-				else if(this.command.split(" ")[6].equals("nuevo.")) 
+
+				else  {
 					JOptionPane.showMessageDialog(null, "Contraseña incorrecta.");
+					usered = false;
 				}
+			}
 			catch(Exception t) {
 				
 			}
@@ -335,4 +185,56 @@ public class ClientThreadCommands extends Thread{
 	public void setUsered(Boolean usered) {
 		this.usered = usered;
 	}
+
+
+	public String getMessage() {
+		return message;
+	}
+
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+
+	public Integer getCont() {
+		return cont;
+	}
+
+
+	public void setCont(Integer cont) {
+		this.cont = cont;
+	}
+
+
+	public PrintWriter getPw() {
+		return pw;
+	}
+
+
+	public void setPw(PrintWriter pw) {
+		this.pw = pw;
+	}
+
+
+	public Integer getDataPort() {
+		return dataPort;
+	}
+
+
+	public void setDataPort(Integer dataPort) {
+		this.dataPort = dataPort;
+	}
+
+
+	public Boolean getSuspended() {
+		return suspended;
+	}
+
+
+	public Boolean getPaused() {
+		return paused;
+	}
+	
+	
 }

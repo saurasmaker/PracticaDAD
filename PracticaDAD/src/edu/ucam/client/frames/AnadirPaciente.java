@@ -12,13 +12,16 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import edu.ucam.client.ClientDataChannel;
+import edu.ucam.client.ClientThreadCommands;
 import edu.ucam.pojos.Paciente;
-import edu.ucam.server.ServerDataChannel;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,13 +45,14 @@ public class AnadirPaciente extends JInternalFrame {
 	private JComponent Barra = ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).getNorthPane();
 	private Dimension dimensionBarra = null;
 	private PrintWriter pw;
-	private Integer dataPort;
+	private ClientThreadCommands clientThreadCommands;
 	
 	/**
 	 * Create the frame.
 	 */
-	public AnadirPaciente(Integer dataPort) {
-		this.dataPort = dataPort;
+	public AnadirPaciente(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
+		this.pw = pw;
+		this.setClientThreadCommands(clientThreadCommands);
 		setBounds(100, 100, 483, 291);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
@@ -71,17 +75,14 @@ public class AnadirPaciente extends JInternalFrame {
 		
 		JButton btnNewAnadir = new JButton("A\u00F1adir");
 		btnNewAnadir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
+			public void actionPerformed(ActionEvent arg0) {	
 				sendData();
-				System.out.println("sended");
 			}
 		});
 		
 		JButton btnNewButtonCancelar = new JButton("Cancelar");
 		btnNewButtonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				cancelAddPaciente();
 				dispose();
 			}
@@ -104,15 +105,15 @@ public class AnadirPaciente extends JInternalFrame {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblFechaNacimiento, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-						.addComponent(lblNewAnadirPaciente, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-						.addComponent(textFieldApellidos, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-						.addComponent(textFieldNombre, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-						.addComponent(lblNombre, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-						.addComponent(lblApellidos, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+						.addComponent(lblFechaNacimiento, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(lblNewAnadirPaciente, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(textFieldApellidos, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(textFieldNombre, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(lblNombre, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(lblApellidos, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnNewButtonCancelar)
-							.addPreferredGap(ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 325, Short.MAX_VALUE)
 							.addComponent(btnNewAnadir))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblDia)
@@ -143,7 +144,7 @@ public class AnadirPaciente extends JInternalFrame {
 					.addComponent(textFieldApellidos, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(lblFechaNacimiento)
-					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -151,7 +152,7 @@ public class AnadirPaciente extends JInternalFrame {
 						.addComponent(spinnerDia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblMes)
 						.addComponent(lblAnio))
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addPreferredGap(ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButtonCancelar)
 						.addComponent(btnNewAnadir))
@@ -174,13 +175,12 @@ public class AnadirPaciente extends JInternalFrame {
 	private void sendData() {
 		
 		Paciente paciente = new Paciente();
-		ServerDataChannel sdc = new ServerDataChannel(dataPort);
+		ClientDataChannel cdc;
 		Date date = null;
 		
 		try {
 			date = new SimpleDateFormat("dd/MM/yyyy").parse(Integer.parseInt(spinnerDia.getValue().toString()) + "/" + Integer.parseInt(spinnerMes.getValue().toString()) + "/" + Integer.parseInt(spinnerAnio.getValue().toString()));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -193,7 +193,16 @@ public class AnadirPaciente extends JInternalFrame {
 			try {
 				this.pw.println("ADDPACIENTE");
 				this.pw.flush();
-				sdc.getOos().writeObject(paciente);
+				System.out.println(clientThreadCommands.getDataPort());
+				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
+					cdc.getOos().writeObject(paciente);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+				System.out.println("sended");
 			}
 			catch(Exception t) {
 			
@@ -220,19 +229,20 @@ public class AnadirPaciente extends JInternalFrame {
 	}
 	
 	private Boolean checkData() {
-		if(textFieldNombre.getText() == null) {
+		
+		if(textFieldNombre.getText().equals("")) {
 			JOptionPane.showMessageDialog(null,"You must complete user name field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
-		else if(textFieldApellidos.getText() == null) {
+		else if(textFieldApellidos.getText().equals("")) {
 			JOptionPane.showMessageDialog(null,"You must complete password field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
-		else if((Integer.parseInt(spinnerDia.getValue().toString()) > 0 && Integer.parseInt(spinnerDia.getValue().toString()) <= 31 ) && (Integer.parseInt(spinnerMes.getValue().toString()) > 0 && Integer.parseInt(spinnerMes.getValue().toString()) <= 12) && (Integer.parseInt(spinnerAnio.getValue().toString()) > 0)) {
-			JOptionPane.showMessageDialog(null,"You must complete user name field.","Field error", JOptionPane.WARNING_MESSAGE);
+		else if((Integer.parseInt(spinnerDia.getValue().toString()) <= 0 || Integer.parseInt(spinnerDia.getValue().toString()) >= 31 ) || (Integer.parseInt(spinnerMes.getValue().toString()) <= 0 || Integer.parseInt(spinnerMes.getValue().toString()) >= 12) || (Integer.parseInt(spinnerAnio.getValue().toString()) <= 0)) {
+			JOptionPane.showMessageDialog(null,"You must complete date field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
-		
+				
 		return true;
 	}
 		
@@ -251,5 +261,13 @@ public class AnadirPaciente extends JInternalFrame {
 
 	public void setPw(PrintWriter pw) {
 		this.pw = pw;
+	}
+
+	public ClientThreadCommands getClientThreadCommands() {
+		return clientThreadCommands;
+	}
+
+	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
+		this.clientThreadCommands = clientThreadCommands;
 	}
 }
