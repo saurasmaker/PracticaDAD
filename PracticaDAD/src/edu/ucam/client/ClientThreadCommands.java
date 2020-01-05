@@ -18,11 +18,12 @@ public class ClientThreadCommands extends Thread{
 	private PrintWriter pw;
 	private Boolean suspended = false, paused = false, loged = false, usered = false;
 	private String command;
-	
+	private Integer dataPort;
 	private Integer cont = 0;
 	
 	//Constructors
-	public ClientThreadCommands(ClientLogin clientLogin, BufferedReader br, PrintWriter pw) {
+	public ClientThreadCommands(ClientLogin clientLogin, BufferedReader br, PrintWriter pw, Integer dataPort) {
+		this.dataPort = dataPort;
 		this.pw = pw;
 		this.br = br;
 		this.clientLogin = clientLogin;
@@ -270,7 +271,7 @@ public class ClientThreadCommands extends Thread{
 	}
 	
 	public void openClientFrame() {
-		ClientFrame frame = new ClientFrame(pw, this);
+		ClientFrame frame = new ClientFrame(pw, this, dataPort);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

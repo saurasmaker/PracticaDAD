@@ -32,6 +32,7 @@ public class AnadirMedico extends JInternalFrame {
 	private JComponent Barra = ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).getNorthPane();
 	private Dimension dimensionBarra = null;
 	private PrintWriter pwCommands;
+	private Integer port;
 	
 	private JTextField textFieldNombre;
 	private JTextField textFieldApellidos;
@@ -40,7 +41,7 @@ public class AnadirMedico extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AnadirMedico(PrintWriter pwCommands) {
+	public AnadirMedico(PrintWriter pwCommands, Integer port) {
 		this.setPwCommands(pwCommands);
 		setBounds(100, 100, 483, 295);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -142,7 +143,7 @@ public class AnadirMedico extends JInternalFrame {
 	private void sendData() {
 		
 		Medico medico = new Medico();
-		ClientDataChannel cdc = new ClientDataChannel();
+		ClientDataChannel cdc = new ClientDataChannel(port);
 		
 		if(checkData()) {
 			
@@ -199,5 +200,13 @@ public class AnadirMedico extends JInternalFrame {
 
 	public void setPwCommands(PrintWriter pwCommands) {
 		this.pwCommands = pwCommands;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 }

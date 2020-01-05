@@ -57,9 +57,10 @@ public class ClientLogin extends JFrame {
 	private ClientThreadCommands clientThreadCommands;
 	private PrintWriter pw;
 	private Integer xMouse, yMouse;
+	private Integer port;
 	
 	//Constructors
-	public ClientLogin(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
+	public ClientLogin(PrintWriter pw, ClientThreadCommands clientThreadCommands, Integer port) {
 		this.setPw(pw);
 		this.setClientThreadCommands(clientThreadCommands);
 		
@@ -242,17 +243,18 @@ public class ClientLogin extends JFrame {
 				
 				this.pw.println("USER");
 				pw.flush();
-				cdc = new ClientDataChannel();
+				cdc = new ClientDataChannel(port);
 				cdc.getPw().println(this.textFieldUserName.getText());
 				cdc.getPw().flush();
 				cdc.closeChannel();
-				
+				++port;
 				this.pw.println("PASS");
 				pw.flush();
-				cdc = new ClientDataChannel();
+				cdc = new ClientDataChannel(port);
 				cdc.getPw().println(String.valueOf(this.passwordField.getPassword()));
 				cdc.getPw().flush();
 				cdc.closeChannel();
+				++port;
 			}
 			catch(Exception t) {
 			
@@ -319,6 +321,14 @@ public class ClientLogin extends JFrame {
 
 	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
 		this.clientThreadCommands = clientThreadCommands;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
 	}	
 	
 }

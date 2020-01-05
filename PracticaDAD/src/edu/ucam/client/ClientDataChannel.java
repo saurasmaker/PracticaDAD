@@ -21,7 +21,8 @@ public class ClientDataChannel{
 	
 	
 	//Constructors
-	public ClientDataChannel() {
+	public ClientDataChannel(Integer port) {
+		this.port = port;
 		this.setConnection();
 		this.setBridges();
 	}

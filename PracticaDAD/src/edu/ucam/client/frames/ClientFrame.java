@@ -46,8 +46,10 @@ public class ClientFrame extends JFrame {
 	
 	private JEditorPane editorPaneData;
 	
+	private Integer dataPort;
+	
 	//Constructor
-	public ClientFrame(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
+	public ClientFrame(PrintWriter pw, ClientThreadCommands clientThreadCommands, Integer dataPort) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
@@ -56,6 +58,7 @@ public class ClientFrame extends JFrame {
 				clientThreadCommands.setSuspended(true);
 			}
 		});
+		this.dataPort = dataPort;
 		this.setClientThreadCommands(clientThreadCommands);
 		this.setPw(pw);
 		
@@ -98,7 +101,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmMostrarPaciente = new JMenuItem("Mostrar");
 		mnPacientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ClientDataChannel cdc = new ClientDataChannel();
+				ClientDataChannel cdc = new ClientDataChannel(dataPort);
 				Paciente paciente = (Paciente)cdc.readObject();
 				mostrarPaciente(paciente);
 			}
@@ -121,7 +124,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmAnadirMedico = new JMenuItem("A\u00F1adir");
 		mntmAnadirMedico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AnadirMedico anadirMedico = new AnadirMedico(pw); 
+				AnadirMedico anadirMedico = new AnadirMedico(pw, dataPort); 
 				desktopPane.add(anadirMedico);
 				try {
 					anadirMedico.setMaximum(true);
@@ -139,7 +142,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmMostrarMedico = new JMenuItem("Mostrar");
 		mntmMostrarMedico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ClientDataChannel cdc = new ClientDataChannel();
+				ClientDataChannel cdc = new ClientDataChannel(dataPort);
 				cdc.getPw().println(JOptionPane.showInputDialog("Introduce el ID del medico a mostrar:"));
 				try {
 					mostrarMedico((Medico)cdc.getOis().readObject());
@@ -341,5 +344,15 @@ public class ClientFrame extends JFrame {
 
 	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
 		this.clientThreadCommands = clientThreadCommands;
+	}
+
+
+	public Integer getDataPort() {
+		return dataPort;
+	}
+
+
+	public void setDataPort(Integer dataPort) {
+		this.dataPort = dataPort;
 	}
 }
