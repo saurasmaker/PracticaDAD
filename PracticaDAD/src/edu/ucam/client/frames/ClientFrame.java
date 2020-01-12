@@ -130,11 +130,7 @@ public class ClientFrame extends JFrame {
 					paciente = (Paciente)cdc.getOis().readObject();
 				}catch(Exception t) {
 					
-				}
-				System.out.println("MOSTRADO1");
-				mostrarPaciente(paciente);
-				System.out.println("MOSTRADO2");
-				
+				}	
 				
 				
 				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
@@ -338,25 +334,37 @@ public class ClientFrame extends JFrame {
 	//Methods
 	void mostrarPaciente(Paciente paciente) {
 	
-		editorPaneData.setText(" >Paciente: " + paciente.getId() + "\n\t-Nombre: "+paciente.getNombre()
-		+ "\n\t-Apellidos: "+paciente.getApellidos()
-		+ "\n\t-Fecha nacimiento: "+paciente.getFechaNacimiento());
+		if(paciente != null)
+			editorPaneData.setText(" >Paciente: " + paciente.getId() + "\n\t-Nombre: "+paciente.getNombre()
+			+ "\n\t-Apellidos: "+paciente.getApellidos()
+			+ "\n\t-Fecha nacimiento: "+paciente.getFechaNacimiento());
+		
+		else
+			editorPaneData.setText(" >Paciente no encontrado.");
 		
 		return;
 	}
 	
 	void mostrarMedico(Medico medico) {
 		
-		editorPaneData.setText(" >Medico: " + medico.getId() + "\n\t-Nombre: "+medico.getNombre()
-		+ "\n\t-Apellidos: "+medico.getApellidos()
-		+ "\n\t-Especialidad: "+medico.getEspecialidad());
+		if(medico != null)
+			editorPaneData.setText(" >Medico: " + medico.getId() + "\n\t-Nombre: "+medico.getNombre()
+			+ "\n\t-Apellidos: "+medico.getApellidos()
+			+ "\n\t-Especialidad: "+medico.getEspecialidad());
+		
+		else
+			editorPaneData.setText(" >Médico no encontrado.");
 		
 		return;
 	}
 	
-	void mostrarMedico(Tratamiento tratamiento) {
+	void mostrarTratamiento(Tratamiento tratamiento) {
 		
-		editorPaneData.setText(" >Medico: " + tratamiento.getId() + "\n\t-Nombre: "+tratamiento.getDescripcion());
+		if(tratamiento != null)
+			editorPaneData.setText(" >Medico: " + tratamiento.getId() + "\n\t-Nombre: "+tratamiento.getDescripcion());
+		
+		else
+			editorPaneData.setText(" >Tratamiento no encontrado.");
 		
 		return;
 	}
