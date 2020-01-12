@@ -17,6 +17,8 @@ public class GetPaciente implements Comando{
 			Paciente p = Singleton.getPaciente(brData.readLine(), pacientes);
 			oosData.writeObject(p);
 			oosData.flush();
+			pwCommands.println("\n OK " + cont + " 200 " + port + " " + address);
+			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{

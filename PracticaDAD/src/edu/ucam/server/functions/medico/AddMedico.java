@@ -15,6 +15,7 @@ public class AddMedico implements Comando{
 		{
 			Medico medico = (Medico)oisData.readObject();
 			medico.setId(GenerateMedicoId.run(medicos));
+			System.out.println("Id generada: " + medico.getId());
 			Singleton.addMedico(medico, medicos);
 			pwCommands.println("OK " + cont + " 200 " + port + " " + address);
 			pwCommands.flush();

@@ -52,7 +52,7 @@ public class ClientThreadCommands extends Thread{
 			
 			//Cuerpo
 			readMessage();
-			System.out.println(message + " " + cont);
+			System.out.println("From Server: " + message + " " + cont);
 			++cont;
 		}
 		
@@ -74,13 +74,10 @@ public class ClientThreadCommands extends Thread{
 	
 	
 	public void checkLoged() {
-		
-		//System.out.println(this.message);
-		
+			
 		if(!usered & !loged) {
 			try {
 				if(this.message.split(" ")[0].equals("OK")) {
-					System.out.println("usered");
 					usered = true;
 					return;
 				}
@@ -97,7 +94,6 @@ public class ClientThreadCommands extends Thread{
 		else if(!loged) {
 			try {
 				if(this.message.split(" ")[0].equals("OK")) {
-					System.out.println("loged");
 					loged = true;
 					clientLogin.dispose();
 					openClientFrame();
@@ -113,10 +109,7 @@ public class ClientThreadCommands extends Thread{
 				
 			}
 		}
-		
-		else
-			JOptionPane.showMessageDialog(null, "Este usuario ya ha sido logeado.");
-					
+	
 		return;
 	}
 	

@@ -101,7 +101,6 @@ public class ClientLogin extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					sendData();
-					System.out.println("sended");
 				}
 			}
 		});
@@ -224,7 +223,6 @@ public class ClientLogin extends JFrame {
 		btnAccept.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				sendData();
-				System.out.println("sended");
 			}
 		});
 		btnAccept.setBounds(226, 363, 78, 23);
@@ -245,7 +243,6 @@ public class ClientLogin extends JFrame {
 				
 				this.pw.println("USER");
 				pw.flush();
-				System.out.println(clientThreadCommands.getDataPort());
 				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
 				cdc.getPw().println(this.textFieldUserName.getText());
@@ -255,7 +252,6 @@ public class ClientLogin extends JFrame {
 				
 				this.pw.println("PASS");
 				pw.flush();
-				System.out.println(clientThreadCommands.getDataPort());
 				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
 				cdc.getPw().println(String.valueOf(this.passwordField.getPassword()));

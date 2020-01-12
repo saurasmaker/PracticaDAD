@@ -263,11 +263,11 @@ public class ServerThreadCommands extends Thread{
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				try {
-					this.setPw(new PrintWriter(new OutputStreamWriter(sdc.getSocket().getOutputStream())));
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				CountPacientes.run(pacientes, cont, message, socket.getLocalPort(), pw, sdc.getPw()); 
+				CountPacientes.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos()); 
 			}
 			else 
 				this.userNotLoged();
@@ -316,13 +316,14 @@ public class ServerThreadCommands extends Thread{
 			
 		case "ADDMEDICO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
 					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
-				} catch (IOException e) {
+					AddMedico.run(medicos, cont, socket.getPort(), message, pw, sdc.getOis());
+				}	
+				catch (IOException e) {
 					e.printStackTrace();
 				}
-				AddMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis()); 
 			}
 			else 
 				this.userNotLoged();
@@ -345,14 +346,15 @@ public class ServerThreadCommands extends Thread{
 			
 		case "GETMEDICO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
 					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
 					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
-				} catch (IOException e) {
-					e.printStackTrace();
+					GetMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
 				}
-				GetMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
+				catch(IOException t) {
+					
+				}
 			}
 			else 
 				this.userNotLoged();
@@ -394,11 +396,11 @@ public class ServerThreadCommands extends Thread{
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				try {
-					sdc.setPw(new PrintWriter(new OutputStreamWriter(sdc.getSocket().getOutputStream())));
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				CountMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getPw());
+				CountMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos()); 
 			}
 			else 
 				this.userNotLoged();

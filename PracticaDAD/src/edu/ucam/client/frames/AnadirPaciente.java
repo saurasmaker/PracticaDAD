@@ -192,11 +192,11 @@ public class AnadirPaciente extends JInternalFrame {
 			try {
 				this.pw.println("ADDPACIENTE");
 				this.pw.flush();
-				System.out.println(clientThreadCommands.getDataPort());
 				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				try {
 					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
 					cdc.getOos().writeObject(paciente);
+					cdc.getOos().flush();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

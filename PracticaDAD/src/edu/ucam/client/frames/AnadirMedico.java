@@ -20,10 +20,10 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class AnadirMedico extends JInternalFrame {
 	
@@ -45,7 +45,8 @@ public class AnadirMedico extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AnadirMedico(PrintWriter pwCommands, ClientThreadCommands clientThreadCommands) {
+	public AnadirMedico(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
+		this.pw = pw;
 		this.clientThreadCommands = clientThreadCommands;
 		setBounds(100, 100, 483, 295);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -71,11 +72,11 @@ public class AnadirMedico extends JInternalFrame {
 		lblNewLabelEspecialidad.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		
 		comboBoxEspecialidad = new JComboBox<String>();
+		comboBoxEspecialidad.setModel(new DefaultComboBoxModel<String>(new String[] {"Psiquiatr\u00EDa", "Aparato digestivo", "Cardiolog\u00EDa"}));
 		
 		JButton btnNewButtonAnadir = new JButton("A\u00F1adir");
 		btnNewButtonAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				sendData();
 				System.out.println("sended");
 			}
@@ -158,23 +159,30 @@ public class AnadirMedico extends JInternalFrame {
 			try {
 				this.pw.println("ADDMEDICO");
 				this.pw.flush();
-				System.out.println(clientThreadCommands.getDataPort());
 				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+
 				try {
 					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
 					cdc.getOos().writeObject(medico);
-				} catch (IOException e) {
-					e.printStackTrace();
+					cdc.getOos().flush();
 				}
+				catch(Exception t) {
+					
+				}
+								
 				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+
 			}
 			catch(Exception t) {
-			
+				
 			}
-			
 			textFieldNombre.setText(null);
 			textFieldApellidos.setText(null);
+			
+			
 		}
+		
+		
 		
 		return;
 	}
