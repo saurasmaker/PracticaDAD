@@ -2,10 +2,8 @@ package edu.ucam.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -26,7 +24,7 @@ public class ServerDataChannel{
 	public ServerDataChannel(Integer dataPort) {
 		this.dataPort = dataPort;
 		this.setConnection();
-		this.setBridges();
+		//this.setBridges();
 	}
 	
 	
@@ -46,18 +44,6 @@ public class ServerDataChannel{
 		return;
 	}
 	
-	
-	private void setBridges() {
-		
-		try {
-			this.setBr(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-			this.setPw(new PrintWriter(new OutputStreamWriter(socket.getOutputStream())));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return;
-	}
 	
 	public String readData() {
 		
@@ -135,6 +121,16 @@ public class ServerDataChannel{
 
 	public void setOos(ObjectOutputStream oos) {
 		this.oos = oos;
+	}
+
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 
 	

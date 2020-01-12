@@ -14,6 +14,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -112,12 +114,29 @@ public class ClientFrame extends JFrame {
 				
 				//Envio Id
 				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				cdc.getPw().println(idPaciente);
 				cdc.getPw().flush();
 
 				//Lectura objeto
-				Paciente paciente = (Paciente)cdc.readObject();
+				Paciente paciente = null;
+				System.out.println();
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					paciente = (Paciente)cdc.getOis().readObject();
+				}catch(Exception t) {
+					
+				}
+				System.out.println("MOSTRADO1");
 				mostrarPaciente(paciente);
+				System.out.println("MOSTRADO2");
+				
+				
+				
 				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 		});

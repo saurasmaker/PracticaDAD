@@ -24,7 +24,6 @@ public class ClientDataChannel{
 	public ClientDataChannel(Integer port) {
 		this.port = port;
 		this.setConnection();
-		this.setBridges();
 	}
 	
 	
@@ -41,19 +40,6 @@ public class ClientDataChannel{
 	}
 	
 	
-	private void setBridges() {
-		
-		try {
-			//this.setOos(new ObjectOutputStream(socket.getOutputStream()));
-			this.setBr(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-			this.setPw(new PrintWriter(new OutputStreamWriter(socket.getOutputStream())));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return;
-	}
-	
 	public String readData() {
 		
 		String data = null;
@@ -65,19 +51,6 @@ public class ClientDataChannel{
 		}
 		
 		return data;
-	}
-	
-	public Object readObject() {
-		
-		Object object = null;
-		
-		try {
-			object = ois.readObject();
-		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
-		}
-		
-		return object;
 	}
 	
 	public void closeChannel() {

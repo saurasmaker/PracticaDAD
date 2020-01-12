@@ -15,6 +15,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import edu.ucam.client.ClientDataChannel;
 import edu.ucam.client.ClientThreadCommands;
 import edu.ucam.pojos.Paciente;
+import edu.ucam.server.functions.paciente.GeneratePacienteId;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -188,8 +189,7 @@ public class AnadirPaciente extends JInternalFrame {
 			
 			paciente.setNombre(textFieldNombre.getText());
 			paciente.setApellidos(textFieldApellidos.getText());
-			paciente.setFechaNacimiento(date);
-			
+			paciente.setFechaNacimiento(date);			
 			try {
 				this.pw.println("ADDPACIENTE");
 				this.pw.flush();
@@ -202,7 +202,7 @@ public class AnadirPaciente extends JInternalFrame {
 					e.printStackTrace();
 				}
 				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
-				System.out.println("sended");
+				System.out.println("Id generada: " + paciente.getId());
 			}
 			catch(Exception t) {
 			

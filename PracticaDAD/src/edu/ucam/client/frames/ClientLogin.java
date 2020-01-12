@@ -17,6 +17,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JPasswordField;
 import javax.swing.JCheckBox;
 import java.beans.PropertyChangeListener;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.beans.PropertyChangeEvent;
@@ -246,6 +247,7 @@ public class ClientLogin extends JFrame {
 				pw.flush();
 				System.out.println(clientThreadCommands.getDataPort());
 				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
 				cdc.getPw().println(this.textFieldUserName.getText());
 				cdc.getPw().flush();
 				cdc.closeChannel();
@@ -255,6 +257,7 @@ public class ClientLogin extends JFrame {
 				pw.flush();
 				System.out.println(clientThreadCommands.getDataPort());
 				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
 				cdc.getPw().println(String.valueOf(this.passwordField.getPassword()));
 				cdc.getPw().flush();
 				cdc.closeChannel();

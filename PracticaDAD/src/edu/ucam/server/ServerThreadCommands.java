@@ -3,6 +3,8 @@ package edu.ucam.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -14,9 +16,6 @@ import edu.ucam.pojos.Expediente;
 import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
-import edu.ucam.server.functions.expediente.AddExpediente;
-import edu.ucam.server.functions.expediente.GetExpediente;
-import edu.ucam.server.functions.expediente.RemoveExpediente;
 import edu.ucam.server.functions.medico.AddMedico;
 import edu.ucam.server.functions.medico.CountMedicos;
 import edu.ucam.server.functions.medico.GetMedico;
@@ -130,6 +129,8 @@ public class ServerThreadCommands extends Thread{
 			
 			try {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+				
 				String text = "";
 				
 				if("admin".equals(text = sdc.getBr().readLine())) {
@@ -140,7 +141,6 @@ public class ServerThreadCommands extends Thread{
 				else {
 					pw.println("Failed " + cont + " 400" + " Not User.");
 					pw.flush();
-					//readCommand();
 				}
 				
 				sdc.closeChannel();
@@ -157,6 +157,8 @@ public class ServerThreadCommands extends Thread{
 			
 			try {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+				
 				String text = "";
 				if("admin".equals(text = sdc.getBr().readLine())) {
 					pw.println("OK " + cont + " 200" + " Welcome " + text + ".");
@@ -170,7 +172,6 @@ public class ServerThreadCommands extends Thread{
 				
 				sdc.closeChannel();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -180,9 +181,14 @@ public class ServerThreadCommands extends Thread{
 			
 		case "ADDPACIENTE"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				AddPaciente.run(pacientes, cont, socket.getPort(), message, pw, sdc.getOis());
-
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
+					AddPaciente.run(pacientes, cont, socket.getPort(), message, pw, sdc.getOis());
+				}
+				catch (IOException e) {
+					 e.printStackTrace();
+				}
 			}
 			else 
 				this.userNotLoged();
@@ -205,8 +211,15 @@ public class ServerThreadCommands extends Thread{
 			
 		case "GETPACIENTE"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				GetPaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+					GetPaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
+				}
+				catch(IOException t) {
+					
+				}
 			}
 			
 			else 
@@ -218,8 +231,13 @@ public class ServerThreadCommands extends Thread{
 			
 		case "REMOVEPACIENTE"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				RemovePaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getBr());
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					RemovePaciente.run(pacientes, cont, address, socket.getPort(), pw, sdc.getBr());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			else 
 				this.userNotLoged();
@@ -244,6 +262,11 @@ public class ServerThreadCommands extends Thread{
 		case "COUNTPACIENTES"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					this.setPw(new PrintWriter(new OutputStreamWriter(sdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				CountPacientes.run(pacientes, cont, message, socket.getLocalPort(), pw, sdc.getPw()); 
 			}
 			else 
