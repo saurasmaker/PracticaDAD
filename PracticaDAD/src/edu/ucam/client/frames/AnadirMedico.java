@@ -11,6 +11,7 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 
 import edu.ucam.client.ClientDataChannel;
+import edu.ucam.client.ClientThreadCommands;
 import edu.ucam.pojos.Medico;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -19,6 +20,8 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 
@@ -31,7 +34,8 @@ public class AnadirMedico extends JInternalFrame {
 	
 	private JComponent Barra = ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).getNorthPane();
 	private Dimension dimensionBarra = null;
-	private PrintWriter pwCommands;
+	private PrintWriter pw;
+	private ClientThreadCommands clientThreadCommands;
 	private Integer port;
 	
 	private JTextField textFieldNombre;
@@ -42,7 +46,6 @@ public class AnadirMedico extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public AnadirMedico(PrintWriter pwCommands, Integer port) {
-		this.setPwCommands(pwCommands);
 		setBounds(100, 100, 483, 295);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
@@ -143,7 +146,7 @@ public class AnadirMedico extends JInternalFrame {
 	private void sendData() {
 		
 		Medico medico = new Medico();
-		ClientDataChannel cdc = new ClientDataChannel(port);
+		ClientDataChannel cdc = null;
 		
 		if(checkData()) {
 			
@@ -152,9 +155,17 @@ public class AnadirMedico extends JInternalFrame {
 			medico.setEspecialidad(comboBoxEspecialidad.getSelectedItem().toString());
 			
 			try {
-				this.pwCommands.println("ADDMEDICO");
-				this.pwCommands.flush();
-				cdc.getOos().writeObject(medico);
+				this.pw.println("ADDMEDICO");
+				this.pw.flush();
+				System.out.println(clientThreadCommands.getDataPort());
+				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
+					cdc.getOos().writeObject(medico);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 			catch(Exception t) {
 			
@@ -192,14 +203,6 @@ public class AnadirMedico extends JInternalFrame {
 
 	public void setDimensionBarra(Dimension dimensionBarra) {
 		this.dimensionBarra = dimensionBarra;
-	}
-
-	public PrintWriter getPwCommands() {
-		return pwCommands;
-	}
-
-	public void setPwCommands(PrintWriter pwCommands) {
-		this.pwCommands = pwCommands;
 	}
 
 	public Integer getPort() {

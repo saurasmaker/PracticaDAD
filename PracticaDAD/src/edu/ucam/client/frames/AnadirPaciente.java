@@ -202,7 +202,6 @@ public class AnadirPaciente extends JInternalFrame {
 					e.printStackTrace();
 				}
 				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
-				System.out.println("Id generada: " + paciente.getId());
 			}
 			catch(Exception t) {
 			
