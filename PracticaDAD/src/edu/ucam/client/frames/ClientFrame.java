@@ -300,7 +300,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmAnadirTratamiento = new JMenuItem("A\u00F1adir");
 		mntmAnadirTratamiento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AnadirTratamiento anadirTratamiento = new AnadirTratamiento(dataPort); 
+				AnadirTratamiento anadirTratamiento = new AnadirTratamiento(dataPort, clientThreadCommands); 
 				desktopPane.add(anadirTratamiento);
 				try {
 					anadirTratamiento.setMaximum(true);
@@ -316,15 +316,90 @@ public class ClientFrame extends JFrame {
 		mnTratamientos.add(mntmActualizarTratamiento);
 		
 		JMenuItem mntmMostrarTratamiento = new JMenuItem("Mostrar");
+		mntmMostrarTratamiento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("GETTRATAMIENTO");
+				pw.flush();
+				
+				//Lectura Id
+				String idTratamiento = JOptionPane.showInputDialog("Introduce el id del tratamiento a mostrar: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idTratamiento);
+				cdc.getPw().flush();
+
+				//Lectura objeto
+				Tratamiento tratamiento = null;
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					tratamiento = (Tratamiento)cdc.getOis().readObject();
+					mostrarTratamiento(tratamiento);
+				}catch(Exception t) {
+					
+				}	
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnTratamientos.add(mntmMostrarTratamiento);
 		
 		JMenuItem mntmEliminarTratamiento = new JMenuItem("Eliminar");
+		mntmEliminarTratamiento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("REMOVETRATAMIENTO");
+				pw.flush();
+				
+				//Lectura Id
+				String idTratamiento = JOptionPane.showInputDialog("Introduce el id del tratamiento a ELIMINAR: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idTratamiento);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnTratamientos.add(mntmEliminarTratamiento);
 		
 		JMenuItem mntmListarTratamientos = new JMenuItem("Listar");
 		mnTratamientos.add(mntmListarTratamientos);
 		
 		JMenuItem mntmContarTratamientos = new JMenuItem("Contar");
+		mntmContarTratamientos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("COUNTTRATAMIENTOS");
+				pw.flush();
+				
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					try {
+						editorPaneData.setText((String)cdc.getOis().readObject());
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnTratamientos.add(mntmContarTratamientos);
 		
 		JMenu mnExpedientes = new JMenu("Expedientes");

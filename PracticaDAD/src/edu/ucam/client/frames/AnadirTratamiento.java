@@ -14,12 +14,17 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import edu.ucam.client.ClientDataChannel;
+import edu.ucam.client.ClientThreadCommands;
+import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
 import edu.ucam.server.ServerDataChannel;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,11 +44,13 @@ public class AnadirTratamiento extends JInternalFrame {
 	private Dimension dimensionBarra = null;
 	private PrintWriter pw;
 	private Integer dataPort;
+	private ClientThreadCommands clientThreadCommands;
 	
 	/**
 	 * Create the frame.
 	 */
-	public AnadirTratamiento(Integer dataPort) {
+	public AnadirTratamiento(Integer dataPort, ClientThreadCommands clientThreadCommands) {
+		this.setClientThreadCommands(clientThreadCommands);
 		this.setDataPort(dataPort);
 		setBounds(100, 100, 483, 343);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -58,7 +65,6 @@ public class AnadirTratamiento extends JInternalFrame {
 		JButton buttonCancelar = new JButton("Cancelar");
 		buttonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				cancelAddTratamiento();
 				dispose();
 			}
@@ -104,9 +110,7 @@ public class AnadirTratamiento extends JInternalFrame {
 		
 		buttonAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				sendData();
-				System.out.println("sended");
 			}
 		});
 	}
@@ -121,10 +125,11 @@ public class AnadirTratamiento extends JInternalFrame {
 		repaint();
 	}
 	
+	
 	private void sendData() {
 		
 		Tratamiento tratamiento = new Tratamiento();
-		ServerDataChannel sdc = new ServerDataChannel(dataPort);
+		ClientDataChannel cdc;
 		
 		if(checkData()) {
 			
@@ -133,7 +138,11 @@ public class AnadirTratamiento extends JInternalFrame {
 			try {
 				this.pw.println("ADDTRATAMIENTO");
 				this.pw.flush();
-				sdc.getOos().writeObject(tratamiento);
+				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
+				cdc.getOos().writeObject(tratamiento);
+				cdc.getOos().flush();
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 			catch(Exception t) {
 			
@@ -187,5 +196,13 @@ public class AnadirTratamiento extends JInternalFrame {
 
 	public void setDataPort(Integer dataPort) {
 		this.dataPort = dataPort;
+	}
+
+	public ClientThreadCommands getClientThreadCommands() {
+		return clientThreadCommands;
+	}
+
+	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
+		this.clientThreadCommands = clientThreadCommands;
 	}
 }

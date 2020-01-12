@@ -411,8 +411,14 @@ public class ServerThreadCommands extends Thread{
 			
 		case "ADDTRATAMIENTO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				AddTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis());
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
+					AddTratamiento.run(tratamientos, cont, message, socket.getPort(), pw, sdc.getOis());
+				}	
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			else 
 				this.userNotLoged();
@@ -435,8 +441,15 @@ public class ServerThreadCommands extends Thread{
 			
 		case "GETTRATAMIENTO"://///////////////////////
 			if(loged) {
-				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				GetTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+					GetTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
+				}
+				catch(IOException t) {
+					
+				}
 			}
 			else 
 				this.userNotLoged();
@@ -463,7 +476,6 @@ public class ServerThreadCommands extends Thread{
 				ListTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 				
-				
 			else 
 				this.userNotLoged();
 			
@@ -474,7 +486,12 @@ public class ServerThreadCommands extends Thread{
 		case "COUNTTRATAMIENTOS"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				CountTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getPw());
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				CountTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 			else 
 				this.userNotLoged();
