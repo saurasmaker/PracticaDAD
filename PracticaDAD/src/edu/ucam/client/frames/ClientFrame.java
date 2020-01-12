@@ -102,15 +102,13 @@ public class ClientFrame extends JFrame {
 		
 		JMenuItem mntmMostrarPaciente = new JMenuItem("Mostrar");
 		mntmMostrarPaciente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("hola");
-				
+			public void actionPerformed(ActionEvent arg0) {				
 				//Envio comando
 				pw.println("GETPACIENTE");
 				pw.flush();
 				
 				//Lectura Id
-				String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a actualizar: ");
+				String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a mostrar: ");
 				
 				//Envio Id
 				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
@@ -128,10 +126,10 @@ public class ClientFrame extends JFrame {
 				try {
 					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
 					paciente = (Paciente)cdc.getOis().readObject();
+					mostrarPaciente(paciente);
 				}catch(Exception t) {
 					
 				}	
-				
 				
 				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
@@ -172,13 +170,35 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmMostrarMedico = new JMenuItem("Mostrar");
 		mntmMostrarMedico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ClientDataChannel cdc = new ClientDataChannel(dataPort);
-				cdc.getPw().println(JOptionPane.showInputDialog("Introduce el ID del medico a mostrar:"));
+				//Envio comando
+				pw.println("GETMEDICO");
+				pw.flush();
+				
+				//Lectura Id
+				String idMedico = JOptionPane.showInputDialog("Introduce el id del médico a mostrar: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				try {
-					mostrarMedico((Medico)cdc.getOis().readObject());
-				} catch (ClassNotFoundException | IOException e) {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				cdc.getPw().println(idMedico);
+				cdc.getPw().flush();
+
+				//Lectura objeto
+				Medico medico = null;
+				System.out.println();
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					medico = (Medico)cdc.getOis().readObject();
+					mostrarMedico(medico);
+				}catch(Exception t) {
+					
+				}	
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 		});
 		mnMedicos.add(mntmMostrarMedico);

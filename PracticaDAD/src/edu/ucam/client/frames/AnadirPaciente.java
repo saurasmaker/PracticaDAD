@@ -15,7 +15,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import edu.ucam.client.ClientDataChannel;
 import edu.ucam.client.ClientThreadCommands;
 import edu.ucam.pojos.Paciente;
-import edu.ucam.server.functions.paciente.GeneratePacienteId;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;

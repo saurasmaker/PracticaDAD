@@ -317,6 +317,11 @@ public class ServerThreadCommands extends Thread{
 		case "ADDMEDICO"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				AddMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis()); 
 			}
 			else 
@@ -341,6 +346,12 @@ public class ServerThreadCommands extends Thread{
 		case "GETMEDICO"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				GetMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
 			}
 			else 
@@ -353,6 +364,11 @@ public class ServerThreadCommands extends Thread{
 		case "REMOVEMEDICO"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				RemoveMedico.run(medicos, cont, address, socket.getPort(), pw, sdc.getBr());
 			}
 			else 
@@ -377,6 +393,11 @@ public class ServerThreadCommands extends Thread{
 		case "COUNTMEDICOS"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setPw(new PrintWriter(new OutputStreamWriter(sdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				CountMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getPw());
 			}
 			else 

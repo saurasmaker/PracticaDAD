@@ -45,7 +45,8 @@ public class AnadirMedico extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AnadirMedico(PrintWriter pwCommands, Integer port) {
+	public AnadirMedico(PrintWriter pwCommands, ClientThreadCommands clientThreadCommands) {
+		this.clientThreadCommands = clientThreadCommands;
 		setBounds(100, 100, 483, 295);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
