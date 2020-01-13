@@ -184,7 +184,7 @@ public class ServerThreadCommands extends Thread{
 				try {
 					ServerDataChannel sdc = new ServerDataChannel(dataPort);
 					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
-					AddPaciente.run(pacientes, cont, socket.getPort(), message, pw, sdc.getOis());
+					AddPaciente.run(pacientes, cont, socket.getPort(), address, pw, sdc.getOis());
 				}
 				catch (IOException e) {
 					 e.printStackTrace();
@@ -200,7 +200,13 @@ public class ServerThreadCommands extends Thread{
 		case "UPDATEPACIENTE"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				UpdatePaciente.run(pacientes, cont, socket.getPort(), address, pw, sdc.getOis());	
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				UpdatePaciente.run(pacientes, cont, socket.getPort(), address, pw, sdc.getOis(), sdc.getOos()); 
 			}
 			else 
 				this.userNotLoged();
@@ -249,6 +255,11 @@ public class ServerThreadCommands extends Thread{
 		case "LISTPACIENTES"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				ListPacientes.run(pacientes, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 			
@@ -319,7 +330,7 @@ public class ServerThreadCommands extends Thread{
 				try {
 					ServerDataChannel sdc = new ServerDataChannel(dataPort);
 					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
-					AddMedico.run(medicos, cont, socket.getPort(), message, pw, sdc.getOis());
+					AddMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis());
 				}	
 				catch (IOException e) {
 					e.printStackTrace();
@@ -335,7 +346,13 @@ public class ServerThreadCommands extends Thread{
 		case "UPDATEMEDICO"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				UpdateMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis()); 
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				UpdateMedico.run(medicos, cont, socket.getPort(), address, pw, sdc.getOis(), sdc.getOos()); 
 			}
 			else 
 				this.userNotLoged();
@@ -383,6 +400,11 @@ public class ServerThreadCommands extends Thread{
 		case "LISTMEDICOS"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				ListMedicos.run(medicos, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 			else 
@@ -414,7 +436,7 @@ public class ServerThreadCommands extends Thread{
 				try {
 					ServerDataChannel sdc = new ServerDataChannel(dataPort);
 					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
-					AddTratamiento.run(tratamientos, cont, message, socket.getPort(), pw, sdc.getOis());
+					AddTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis());
 				}	
 				catch (IOException e) {
 					e.printStackTrace();
@@ -430,7 +452,13 @@ public class ServerThreadCommands extends Thread{
 		case "UPDATETRATAMIENTO"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
-				UpdateTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis());
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				UpdateTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOis(), sdc.getOos()); 
 			}
 			else 
 				this.userNotLoged();
@@ -461,6 +489,11 @@ public class ServerThreadCommands extends Thread{
 		case "REMOVETRATAMIENTO"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				RemoveTratamiento.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
 			}
 			else 
@@ -473,6 +506,11 @@ public class ServerThreadCommands extends Thread{
 		case "LISTTRATAMIENTOS"://///////////////////////
 			if(loged) {
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				ListTratamientos.run(tratamientos, cont, address, socket.getPort(), pw, sdc.getOos());
 			}
 				

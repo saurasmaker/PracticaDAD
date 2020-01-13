@@ -52,7 +52,10 @@ public class ClientThreadCommands extends Thread{
 			
 			//Cuerpo
 			readMessage();
-			System.out.println("From Server: " + message + " " + cont);
+			
+			if(message!=null)
+				System.out.println("From Server: " + message + " " + cont);
+			
 			++cont;
 		}
 		

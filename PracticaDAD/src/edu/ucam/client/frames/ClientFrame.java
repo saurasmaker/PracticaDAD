@@ -13,10 +13,9 @@ import edu.ucam.pojos.Tratamiento;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import javax.swing.JMenuBar;
@@ -96,8 +95,36 @@ public class ClientFrame extends JFrame {
 		
 		JMenuItem mntmActualizarPaciente = new JMenuItem("Actualizar");
 		mntmActualizarPaciente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a actualizar: ");
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("UPDATEPACIENTE");
+				pw.flush();
+				
+				//Lectura Id
+				String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a actualizar: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idPaciente);
+				cdc.getPw().flush();
+
+				//Lectura objeto
+				Paciente paciente = null;
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					paciente = (Paciente)cdc.getOis().readObject();
+				}catch(Exception t) {
+					
+				}	
+				
+				
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 		});
 		mnPacientes.add(mntmActualizarPaciente);
@@ -127,6 +154,7 @@ public class ClientFrame extends JFrame {
 				try {
 					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
 					paciente = (Paciente)cdc.getOis().readObject();
+					editorPaneData.setText("");
 					mostrarPaciente(paciente);
 				}catch(Exception t) {
 					
@@ -163,7 +191,37 @@ public class ClientFrame extends JFrame {
 		});
 		mnPacientes.add(mntmEliminarPaciente);
 		
+		
 		JMenuItem mntmListarPacientes = new JMenuItem("Listar");
+		mntmListarPacientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("LISTPACIENTES");
+				pw.flush();
+				
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					ObjectInputStream ois = cdc.getOis();
+					Integer tam = 0;
+					try {
+						
+						tam = (Integer)ois.readObject();
+						editorPaneData.setText("");
+						for(int i = 0;i < tam;++i)
+							mostrarPaciente((Paciente)ois.readObject());
+						
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnPacientes.add(mntmListarPacientes);
 		
 		JMenuItem mntmContarPacientes = new JMenuItem("Contar");
@@ -177,6 +235,7 @@ public class ClientFrame extends JFrame {
 				try {
 					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
 					try {
+						editorPaneData.setText("");
 						editorPaneData.setText((String)cdc.getOis().readObject());
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
@@ -209,6 +268,51 @@ public class ClientFrame extends JFrame {
 		mnMedicos.add(mntmAnadirMedico);
 		
 		JMenuItem menuActualizarMedico = new JMenuItem("Actualizar");
+		menuActualizarMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("UPDATEMEDICO");
+				pw.flush();
+				
+				//Lectura Id
+				String idMedico = JOptionPane.showInputDialog("Introduce el id del médico a ACTUALIZAR: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				try {
+					cdc.getOos().writeObject(idMedico);
+					cdc.getOos().flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				//Lectura objeto
+				Medico medico = null;
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					medico = (Medico)cdc.getOis().readObject();
+					System.out.println(medico.getId());
+				}catch(Exception t) {
+					
+				}	
+				
+				ActualizarMedico am = new ActualizarMedico(medico, cdc, clientThreadCommands);
+				desktopPane.add(am);
+				try {
+					am.setMaximum(true);
+				} catch (PropertyVetoException e) {
+					e.printStackTrace();
+				}
+				am.show();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnMedicos.add(menuActualizarMedico);
 		
 		JMenuItem mntmMostrarMedico = new JMenuItem("Mostrar");
@@ -236,6 +340,7 @@ public class ClientFrame extends JFrame {
 				try {
 					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
 					medico = (Medico)cdc.getOis().readObject();
+					editorPaneData.setText("");
 					mostrarMedico(medico);
 				}catch(Exception t) {
 					
@@ -272,6 +377,35 @@ public class ClientFrame extends JFrame {
 		mnMedicos.add(mntmEliminarMedico);
 		
 		JMenuItem mntmListarMedicos = new JMenuItem("Listar");
+		mntmListarMedicos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("LISTMEDICOS");
+				pw.flush();
+				
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					ObjectInputStream ois = cdc.getOis();
+					Integer tam = 0;
+					try {
+						
+						tam = (Integer)ois.readObject();
+						editorPaneData.setText("");
+						for(int i = 0;i < tam;++i)
+							mostrarMedico((Medico)ois.readObject());
+						
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnMedicos.add(mntmListarMedicos);
 		
 		JMenuItem mntmContarMedicos = new JMenuItem("Contar");
@@ -283,8 +417,13 @@ public class ClientFrame extends JFrame {
 				
 				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				try {
-					cdc.setBr(new BufferedReader(new InputStreamReader(cdc.getSocket().getInputStream())));
-					editorPaneData.setText(cdc.getBr().readLine());
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					try {
+						editorPaneData.setText("");
+						editorPaneData.setText((String)cdc.getOis().readObject());
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -300,7 +439,7 @@ public class ClientFrame extends JFrame {
 		JMenuItem mntmAnadirTratamiento = new JMenuItem("A\u00F1adir");
 		mntmAnadirTratamiento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AnadirTratamiento anadirTratamiento = new AnadirTratamiento(dataPort, clientThreadCommands); 
+				AnadirTratamiento anadirTratamiento = new AnadirTratamiento(pw, clientThreadCommands); 
 				desktopPane.add(anadirTratamiento);
 				try {
 					anadirTratamiento.setMaximum(true);
@@ -340,6 +479,7 @@ public class ClientFrame extends JFrame {
 				try {
 					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
 					tratamiento = (Tratamiento)cdc.getOis().readObject();
+					editorPaneData.setText("");
 					mostrarTratamiento(tratamiento);
 				}catch(Exception t) {
 					
@@ -376,6 +516,35 @@ public class ClientFrame extends JFrame {
 		mnTratamientos.add(mntmEliminarTratamiento);
 		
 		JMenuItem mntmListarTratamientos = new JMenuItem("Listar");
+		mntmListarPacientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("LISTTRATAMIENTOS");
+				pw.flush();
+				
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					ObjectInputStream ois = cdc.getOis();
+					Integer tam = 0;
+					try {
+						
+						tam = (Integer)ois.readObject();
+						editorPaneData.setText("");
+						for(int i = 0;i < tam;++i)
+							mostrarTratamiento((Tratamiento)ois.readObject());
+						
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnTratamientos.add(mntmListarTratamientos);
 		
 		JMenuItem mntmContarTratamientos = new JMenuItem("Contar");
@@ -389,6 +558,7 @@ public class ClientFrame extends JFrame {
 				try {
 					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
 					try {
+						editorPaneData.setText("");
 						editorPaneData.setText((String)cdc.getOis().readObject());
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
@@ -512,9 +682,9 @@ public class ClientFrame extends JFrame {
 	void mostrarPaciente(Paciente paciente) {
 	
 		if(paciente != null)
-			editorPaneData.setText(" >Paciente: " + paciente.getId() + "\n\t-Nombre: "+paciente.getNombre()
+			editorPaneData.setText(editorPaneData.getText() + " >Paciente: " + paciente.getId() + "\n\t-Nombre: "+paciente.getNombre()
 			+ "\n\t-Apellidos: "+paciente.getApellidos()
-			+ "\n\t-Fecha nacimiento: "+paciente.getFechaNacimiento());
+			+ "\n\t-Fecha nacimiento: "+paciente.getFechaNacimiento() + "\n\n");
 		
 		else
 			editorPaneData.setText(" >Paciente no encontrado.");
@@ -525,9 +695,9 @@ public class ClientFrame extends JFrame {
 	void mostrarMedico(Medico medico) {
 		
 		if(medico != null)
-			editorPaneData.setText(" >Medico: " + medico.getId() + "\n\t-Nombre: "+medico.getNombre()
+			editorPaneData.setText(editorPaneData.getText() + " >Medico: " + medico.getId() + "\n\t-Nombre: "+medico.getNombre()
 			+ "\n\t-Apellidos: "+medico.getApellidos()
-			+ "\n\t-Especialidad: "+medico.getEspecialidad());
+			+ "\n\t-Especialidad: "+medico.getEspecialidad() + "\n\n");
 		
 		else
 			editorPaneData.setText(" >Médico no encontrado.");
@@ -538,7 +708,8 @@ public class ClientFrame extends JFrame {
 	void mostrarTratamiento(Tratamiento tratamiento) {
 		
 		if(tratamiento != null)
-			editorPaneData.setText(" >Medico: " + tratamiento.getId() + "\n\t-Nombre: "+tratamiento.getDescripcion());
+			editorPaneData.setText(editorPaneData.getText() + " >Tratamiento: " + tratamiento.getId() 
+			+ "\n\t-Descripción: "+tratamiento.getDescripcion() + "\n\n");
 		
 		else
 			editorPaneData.setText(" >Tratamiento no encontrado.");

@@ -16,9 +16,9 @@ public class Singleton {
 		return;
 	}
 	
-	public static void updatePaciente(String idPaciente, Paciente paciente, ArrayList<Paciente> pacientes) {
+	public static void updatePaciente(Paciente paciente, ArrayList<Paciente> pacientes) {
 
-		Paciente actualizar = Singleton.getPaciente(idPaciente, pacientes);
+		Paciente actualizar = Singleton.getPaciente(paciente.getId(), pacientes);
 		actualizar.setApellidos(paciente.getApellidos());
 		actualizar.setNombre(paciente.getNombre());
 		actualizar.setFechaNacimiento(paciente.getFechaNacimiento());
@@ -145,12 +145,15 @@ public class Singleton {
 		return;
 	}
 	
-	public static void updateMedico(String idMedico, Medico medico, ArrayList<Medico> medicos) {
+	public static void updateMedico(Medico medico, ArrayList<Medico> medicos) {
 
-		Medico actualizar = Singleton.getMedico(idMedico, medicos);
+		System.out.println(medico.getId());
+		
+		Medico actualizar = Singleton.getMedico(medico.getId(), medicos);
 		actualizar.setApellidos(medico.getApellidos());
 		actualizar.setNombre(medico.getNombre());
 		actualizar.setEspecialidad(medico.getEspecialidad());
+		
 		
 		return;
 	}
@@ -194,9 +197,9 @@ public class Singleton {
 		return;
 	}
 	
-	public static void updateTratamiento(String idTratamiento, Tratamiento tratamiento, ArrayList<Tratamiento> tratamientos) {
+	public static void updateTratamiento(Tratamiento tratamiento, ArrayList<Tratamiento> tratamientos) {
 
-		Tratamiento actualizar = Singleton.getTratamiento(idTratamiento, tratamientos);
+		Tratamiento actualizar = Singleton.getTratamiento(tratamiento.getId(), tratamientos);
 		actualizar.setDescripcion(actualizar.getDescripcion());
 		
 		return;

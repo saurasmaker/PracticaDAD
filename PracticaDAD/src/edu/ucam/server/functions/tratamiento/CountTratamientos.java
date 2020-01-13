@@ -11,7 +11,7 @@ public class CountTratamientos implements Comando{
 	public static void run(ArrayList<Tratamiento> tratamientos, int cont, String address, int port, PrintWriter pwCommands, ObjectOutputStream oosData) 
 	{		
 		try {
-			oosData.writeObject("\n >Médicos \n   +Cantidad: " + tratamientos.size());
+			oosData.writeObject("\n >TRATAMIENTOS \n   +Cantidad: " + tratamientos.size());
 			oosData.flush();
 			pwCommands.println("\n OK " + cont + " 200 " + port + " " + address);
 			pwCommands.flush();	

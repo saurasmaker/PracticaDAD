@@ -17,7 +17,6 @@ public class GetMedico implements Comando{
 			Medico medico = Singleton.getMedico(brData.readLine(), medicos);
 			oosData.writeObject(medico);
 			oosData.flush();
-			//("   +Medico: " +"\n     -Nombre: " +medico.getNombre() + "\n     -Apellidos: "  + medico.getApellidos() + "\n     -Especialidad: "  + medico.getEspecialidad());
 			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
 			pwCommands.flush();
 		} 

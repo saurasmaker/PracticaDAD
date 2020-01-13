@@ -20,12 +20,10 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 
-public class AnadirMedico extends JInternalFrame {
+public class ActualizarMedico extends JInternalFrame {
 	
 	/**
 	 * 
@@ -34,20 +32,22 @@ public class AnadirMedico extends JInternalFrame {
 	
 	private JComponent Barra = ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).getNorthPane();
 	private Dimension dimensionBarra = null;
-	private PrintWriter pw;
+	private ClientDataChannel cdc;
 	private ClientThreadCommands clientThreadCommands;
 	private Integer port;
 	
 	private JTextField textFieldNombre;
 	private JTextField textFieldApellidos;
 	private JComboBox<String> comboBoxEspecialidad;
-
+	
+	private Medico medicoActualizar;
 	/**
 	 * Create the frame.
 	 */
-	public AnadirMedico(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
-		this.pw = pw;
-		this.clientThreadCommands = clientThreadCommands;
+	public ActualizarMedico(Medico medico, ClientDataChannel cdc, ClientThreadCommands clientThreadCommands) {
+		this.cdc = cdc;
+		this.setMedicoActualizar(medico);
+		this.setClientThreadCommands(clientThreadCommands);
 		setBounds(100, 100, 483, 295);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
@@ -131,6 +131,10 @@ public class AnadirMedico extends JInternalFrame {
 		);
 		getContentPane().setLayout(groupLayout);
 
+		textFieldNombre.setText(medicoActualizar.getNombre());
+		textFieldApellidos.setText(medicoActualizar.getApellidos());
+		comboBoxEspecialidad.setSelectedItem(medicoActualizar.getEspecialidad());
+		
 	}
 	
 	//Methods
@@ -146,42 +150,25 @@ public class AnadirMedico extends JInternalFrame {
 	
 	private void sendData() {
 		
-		Medico medico = new Medico();
-		ClientDataChannel cdc = null;
-		
 		if(checkData()) {
 			
-			medico.setNombre(textFieldNombre.getText());
-			medico.setApellidos(textFieldApellidos.getText());
-			medico.setEspecialidad(comboBoxEspecialidad.getSelectedItem().toString());
+			medicoActualizar.setNombre(textFieldNombre.getText());
+			medicoActualizar.setApellidos(textFieldApellidos.getText());
+			medicoActualizar.setEspecialidad(comboBoxEspecialidad.getSelectedItem().toString());
 			
+		
 			try {
-				this.pw.println("ADDMEDICO");
-				this.pw.flush();
-				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
-
-				try {
-					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
-					cdc.getOos().writeObject(medico);
-					cdc.getOos().flush();
-				}
-				catch(Exception t) {
-					
-				}
-								
-				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
-
+				cdc.getOos().writeObject(medicoActualizar);
+				cdc.getOos().flush();
 			}
 			catch(Exception t) {
-				
+					
 			}
+									
 			textFieldNombre.setText(null);
 			textFieldApellidos.setText(null);
 			
-			
 		}
-		
-		
 		
 		return;
 	}
@@ -220,4 +207,21 @@ public class AnadirMedico extends JInternalFrame {
 	public void setPort(Integer port) {
 		this.port = port;
 	}
+
+	public Medico getMedicoActualizar() {
+		return medicoActualizar;
+	}
+
+	public void setMedicoActualizar(Medico medicoActualizar) {
+		this.medicoActualizar = medicoActualizar;
+	}
+
+	public ClientThreadCommands getClientThreadCommands() {
+		return clientThreadCommands;
+	}
+
+	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
+		this.clientThreadCommands = clientThreadCommands;
+	}
+
 }

@@ -25,7 +25,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 
-public class AnadirTratamiento extends JInternalFrame {
+public class ActualizarTratamiento extends JInternalFrame {
 
 	
 	/**
@@ -43,7 +43,7 @@ public class AnadirTratamiento extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AnadirTratamiento(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
+	public ActualizarTratamiento(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
 		this.pw = pw;
 		this.setClientThreadCommands(clientThreadCommands);
 		this.setDataPort(dataPort);
