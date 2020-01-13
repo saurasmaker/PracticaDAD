@@ -101,28 +101,40 @@ public class ClientFrame extends JFrame {
 				pw.flush();
 				
 				//Lectura Id
-				String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a actualizar: ");
+				String idPaciente = JOptionPane.showInputDialog("Introduce el id del paciente a ACTUALIZAR: ");
 				
 				//Envio Id
 				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
 				try {
-					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				cdc.getPw().println(idPaciente);
-				cdc.getPw().flush();
+				try {
+					cdc.getOos().writeObject(idPaciente);
+					cdc.getOos().flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 
 				//Lectura objeto
 				Paciente paciente = null;
 				try {
 					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
 					paciente = (Paciente)cdc.getOis().readObject();
+					System.out.println(paciente.getId());
 				}catch(Exception t) {
 					
 				}	
 				
-				
+				ActualizarPaciente ap = new ActualizarPaciente(paciente, cdc, clientThreadCommands);
+				desktopPane.add(ap);
+				try {
+					ap.setMaximum(true);
+				} catch (PropertyVetoException e) {
+					e.printStackTrace();
+				}
+				ap.show();
 				
 				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
@@ -452,6 +464,51 @@ public class ClientFrame extends JFrame {
 		mnTratamientos.add(mntmAnadirTratamiento);
 		
 		JMenuItem mntmActualizarTratamiento = new JMenuItem("Actualizar");
+		menuActualizarMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("UPDATETRATAMIENTO");
+				pw.flush();
+				
+				//Lectura Id
+				String idMedico = JOptionPane.showInputDialog("Introduce el id del trtamiento a ACTUALIZAR: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				try {
+					cdc.getOos().writeObject(idMedico);
+					cdc.getOos().flush();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				//Lectura objeto
+				Tratamiento tratamiento = null;
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					tratamiento = (Tratamiento)cdc.getOis().readObject();
+					System.out.println(tratamiento.getId());
+				}catch(Exception t) {
+					
+				}	
+				
+				ActualizarTratamiento at = new ActualizarTratamiento(tratamiento, cdc, clientThreadCommands);
+				desktopPane.add(at);
+				try {
+					at.setMaximum(true);
+				} catch (PropertyVetoException e) {
+					e.printStackTrace();
+				}
+				at.show();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnTratamientos.add(mntmActualizarTratamiento);
 		
 		JMenuItem mntmMostrarTratamiento = new JMenuItem("Mostrar");
