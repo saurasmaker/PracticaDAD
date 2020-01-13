@@ -52,9 +52,9 @@ public class ActualizarMedico extends JInternalFrame {
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
 		
-		JLabel lblAadirMdico = new JLabel("A\u00F1adir M\u00E9dico");
-		lblAadirMdico.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAadirMdico.setFont(new Font("Tahoma", Font.BOLD, 18));
+		JLabel lblActlzrMdico = new JLabel("Actualizar M\u00E9dico");
+		lblActlzrMdico.setHorizontalAlignment(SwingConstants.CENTER);
+		lblActlzrMdico.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
 		JLabel lblNewLabelNombre = new JLabel("Nombre:");
 		lblNewLabelNombre.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -74,7 +74,7 @@ public class ActualizarMedico extends JInternalFrame {
 		comboBoxEspecialidad = new JComboBox<String>();
 		comboBoxEspecialidad.setModel(new DefaultComboBoxModel<String>(new String[] {"Psiquiatr\u00EDa", "Aparato digestivo", "Cardiolog\u00EDa"}));
 		
-		JButton btnNewButtonAnadir = new JButton("A\u00F1adir");
+		JButton btnNewButtonAnadir = new JButton("Actualizar");
 		btnNewButtonAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				sendData();
@@ -93,7 +93,7 @@ public class ActualizarMedico extends JInternalFrame {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblAadirMdico, GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+						.addComponent(lblActlzrMdico, GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
 						.addComponent(lblNewLabelNombre)
 						.addComponent(lblNewLabelApellidos)
 						.addComponent(lblNewLabelEspecialidad)
@@ -110,7 +110,7 @@ public class ActualizarMedico extends JInternalFrame {
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblAadirMdico)
+					.addComponent(lblActlzrMdico)
 					.addGap(18)
 					.addComponent(lblNewLabelNombre)
 					.addPreferredGap(ComponentPlacement.RELATED)

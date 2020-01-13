@@ -57,9 +57,9 @@ public class ActualizarPaciente extends JInternalFrame {
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
 		
-		JLabel lblNewAnadirPaciente = new JLabel("A\u00F1adir Paciente");
-		lblNewAnadirPaciente.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNewAnadirPaciente.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel lblNewActlzrPaciente = new JLabel("Actualizar Paciente");
+		lblNewActlzrPaciente.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblNewActlzrPaciente.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
 		
@@ -73,7 +73,7 @@ public class ActualizarPaciente extends JInternalFrame {
 		
 		JLabel lblFechaNacimiento = new JLabel("Fecha de Nacimiento:");
 		
-		JButton btnNewAnadir = new JButton("A\u00F1adir");
+		JButton btnNewAnadir = new JButton("Actualizar");
 		btnNewAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
 				sendData();
@@ -106,7 +106,7 @@ public class ActualizarPaciente extends JInternalFrame {
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblFechaNacimiento, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
-						.addComponent(lblNewAnadirPaciente, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(lblNewActlzrPaciente, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 						.addComponent(textFieldApellidos, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 						.addComponent(textFieldNombre, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 						.addComponent(lblNombre, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
@@ -133,7 +133,7 @@ public class ActualizarPaciente extends JInternalFrame {
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(lblNewAnadirPaciente)
+					.addComponent(lblNewActlzrPaciente)
 					.addGap(18)
 					.addComponent(lblNombre)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -160,6 +160,11 @@ public class ActualizarPaciente extends JInternalFrame {
 		);
 		getContentPane().setLayout(groupLayout);
 
+		textFieldNombre.setText(pacienteActualizar.getNombre());
+		textFieldApellidos.setText(pacienteActualizar.getApellidos());
+		spinnerDia.setValue(pacienteActualizar);
+		spinnerMes.setValue(0);
+		spinnerAnio.setValue(0);
 	}
 	
 	//Methods
@@ -174,33 +179,23 @@ public class ActualizarPaciente extends JInternalFrame {
 	
 	private void sendData() {
 		
-		Paciente paciente = new Paciente();
-		ClientDataChannel cdc;
-		Date date = null;
-		
+		/*
 		try {
 			date = new SimpleDateFormat("dd/MM/yyyy").parse(Integer.parseInt(spinnerDia.getValue().toString()) + "/" + Integer.parseInt(spinnerMes.getValue().toString()) + "/" + Integer.parseInt(spinnerAnio.getValue().toString()));
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		if(checkData()) {
 			
-			paciente.setNombre(textFieldNombre.getText());
-			paciente.setApellidos(textFieldApellidos.getText());
-			paciente.setFechaNacimiento(date);			
+			pacienteActualizar.setNombre(textFieldNombre.getText());
+			pacienteActualizar.setApellidos(textFieldApellidos.getText());
+			pacienteActualizar.setFechaNacimiento(date);	
+			
 			try {
-				this.pw.println("ADDPACIENTE");
-				this.pw.flush();
-				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
-				try {
-					cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
-					cdc.getOos().writeObject(paciente);
-					cdc.getOos().flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+
+				cdc.getOos().writeObject(pacienteActualizar);
+				cdc.getOos().flush();
 			}
 			catch(Exception t) {
 			

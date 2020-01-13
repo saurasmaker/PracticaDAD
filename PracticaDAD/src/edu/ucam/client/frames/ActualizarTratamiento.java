@@ -51,11 +51,11 @@ public class ActualizarTratamiento extends JInternalFrame {
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		quitarLaBarraTitulo();
 		
-		JLabel labelTratamiento = new JLabel("A\u00F1adir Tratamiento");
+		JLabel labelTratamiento = new JLabel("Actualizar Tratamiento");
 		labelTratamiento.setHorizontalAlignment(SwingConstants.CENTER);
 		labelTratamiento.setFont(new Font("Tahoma", Font.BOLD, 18));
 		
-		JButton buttonAnadir = new JButton("A\u00F1adir");
+		JButton buttonAnadir = new JButton("Actualizar");
 		buttonAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				sendData();
@@ -79,12 +79,12 @@ public class ActualizarTratamiento extends JInternalFrame {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
 						.addComponent(labelTratamiento, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 443, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(buttonCancelar, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
-							.addComponent(buttonAnadir, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED, 287, Short.MAX_VALUE)
+							.addComponent(buttonAnadir))
 						.addComponent(labelDescripcion))
 					.addContainerGap())
 		);
@@ -96,7 +96,7 @@ public class ActualizarTratamiento extends JInternalFrame {
 					.addGap(18)
 					.addComponent(labelDescripcion)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(buttonCancelar)
