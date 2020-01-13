@@ -20,9 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,14 +41,17 @@ public class ActualizarPaciente extends JInternalFrame {
 
 	private JComponent Barra = ((javax.swing.plaf.basic.BasicInternalFrameUI) getUI()).getNorthPane();
 	private Dimension dimensionBarra = null;
-	private PrintWriter pw;
 	private ClientThreadCommands clientThreadCommands;
+	private ClientDataChannel cdc;
 	
+	
+	private Paciente pacienteActualizar;
 	/**
 	 * Create the frame.
 	 */
-	public ActualizarPaciente(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
-		this.pw = pw;
+	public ActualizarPaciente(Paciente paciente, ClientDataChannel cdc, ClientThreadCommands clientThreadCommands) {
+		this.cdc = cdc;
+		this.pacienteActualizar = paciente;
 		this.setClientThreadCommands(clientThreadCommands);
 		setBounds(100, 100, 483, 291);
 		setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -77,13 +77,14 @@ public class ActualizarPaciente extends JInternalFrame {
 		btnNewAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
 				sendData();
+				dispose();
 			}
 		});
 		
 		JButton btnNewButtonCancelar = new JButton("Cancelar");
 		btnNewButtonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cancelAddPaciente();
+				sendNull();
 				dispose();
 			}
 		});
@@ -113,20 +114,20 @@ public class ActualizarPaciente extends JInternalFrame {
 						.addComponent(lblApellidos, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnNewButtonCancelar)
-							.addPreferredGap(ComponentPlacement.RELATED, 325, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 309, Short.MAX_VALUE)
 							.addComponent(btnNewAnadir))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblDia)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinnerDia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(spinnerDia, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
 							.addComponent(lblMes)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+							.addGap(28)
 							.addComponent(lblAnio)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -146,11 +147,11 @@ public class ActualizarPaciente extends JInternalFrame {
 					.addComponent(lblFechaNacimiento)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblDia)
 						.addComponent(spinnerDia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblMes)
+						.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblAnio))
 					.addPreferredGap(ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -159,14 +160,17 @@ public class ActualizarPaciente extends JInternalFrame {
 					.addContainerGap())
 		);
 		getContentPane().setLayout(groupLayout);
-
+		
+		String[] fecha = new SimpleDateFormat("dd/MM/yyyy").format(paciente.getFechaNacimiento()).toString().split("/");
+		
 		textFieldNombre.setText(pacienteActualizar.getNombre());
 		textFieldApellidos.setText(pacienteActualizar.getApellidos());
-		spinnerDia.setValue(pacienteActualizar);
-		spinnerMes.setValue(0);
-		spinnerAnio.setValue(0);
+		spinnerDia.setValue(Integer.parseInt(fecha[0]));
+		spinnerMes.setValue(Integer.parseInt(fecha[1]));
+		spinnerAnio.setValue(Integer.parseInt(fecha[2]));
 	}
-	
+
+
 	//Methods
 	public void quitarLaBarraTitulo()
 	{
@@ -179,12 +183,13 @@ public class ActualizarPaciente extends JInternalFrame {
 	
 	private void sendData() {
 		
-		/*
+		Date date = null;
+
 		try {
 			date = new SimpleDateFormat("dd/MM/yyyy").parse(Integer.parseInt(spinnerDia.getValue().toString()) + "/" + Integer.parseInt(spinnerMes.getValue().toString()) + "/" + Integer.parseInt(spinnerAnio.getValue().toString()));
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}*/
+		}
 		
 		if(checkData()) {
 			
@@ -200,26 +205,28 @@ public class ActualizarPaciente extends JInternalFrame {
 			catch(Exception t) {
 			
 			}
-			
-			textFieldNombre.setText(null);
-			textFieldApellidos.setText(null);
-			spinnerDia.setValue(0);
-			spinnerMes.setValue(0);
-			spinnerAnio.setValue(0);
+
 		}
 		
 		return;
 	}
 	
-	private void cancelAddPaciente() {
-		try {
-			this.pw.println("EXIT ADD PACIENTE");
-			pw.flush();
-		}
-		catch(Exception t) {
+	private void sendNull() {
+
+			try {
+
+				cdc.getOos().writeObject(null);
+				cdc.getOos().flush();
+			}
+			catch(Exception t) {
+			
+			}
+
 		
-		}
+		
+		return;
 	}
+
 	
 	private Boolean checkData() {
 		
@@ -231,7 +238,7 @@ public class ActualizarPaciente extends JInternalFrame {
 			JOptionPane.showMessageDialog(null,"You must complete password field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
-		else if((Integer.parseInt(spinnerDia.getValue().toString()) <= 0 || Integer.parseInt(spinnerDia.getValue().toString()) >= 31 ) || (Integer.parseInt(spinnerMes.getValue().toString()) <= 0 || Integer.parseInt(spinnerMes.getValue().toString()) >= 12) || (Integer.parseInt(spinnerAnio.getValue().toString()) <= 0)) {
+		else if((Integer.parseInt(spinnerDia.getValue().toString()) <= 0 || Integer.parseInt(spinnerDia.getValue().toString()) > 31 ) || (Integer.parseInt(spinnerMes.getValue().toString()) <= 0 || Integer.parseInt(spinnerMes.getValue().toString()) > 12) || (Integer.parseInt(spinnerAnio.getValue().toString()) <= 0)) {
 			JOptionPane.showMessageDialog(null,"You must complete date field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
@@ -248,13 +255,6 @@ public class ActualizarPaciente extends JInternalFrame {
 		this.dimensionBarra = dimensionBarra;
 	}
 	
-	public PrintWriter getPw() {
-		return pw;
-	}
-
-	public void setPw(PrintWriter pw) {
-		this.pw = pw;
-	}
 
 	public ClientThreadCommands getClientThreadCommands() {
 		return clientThreadCommands;

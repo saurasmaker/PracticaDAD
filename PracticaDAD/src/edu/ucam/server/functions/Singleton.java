@@ -146,8 +146,6 @@ public class Singleton {
 	}
 	
 	public static void updateMedico(Medico medico, ArrayList<Medico> medicos) {
-
-		System.out.println(medico.getId());
 		
 		Medico actualizar = Singleton.getMedico(medico.getId(), medicos);
 		actualizar.setApellidos(medico.getApellidos());
@@ -200,7 +198,7 @@ public class Singleton {
 	public static void updateTratamiento(Tratamiento tratamiento, ArrayList<Tratamiento> tratamientos) {
 
 		Tratamiento actualizar = Singleton.getTratamiento(tratamiento.getId(), tratamientos);
-		actualizar.setDescripcion(actualizar.getDescripcion());
+		actualizar.setDescripcion(tratamiento.getDescripcion());
 		
 		return;
 	}

@@ -21,7 +21,6 @@ import edu.ucam.pojos.Tratamiento;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.awt.event.ActionEvent;
 
@@ -39,12 +38,16 @@ public class ActualizarTratamiento extends JInternalFrame {
 	private PrintWriter pw;
 	private Integer dataPort;
 	private ClientThreadCommands clientThreadCommands;
+	private ClientDataChannel cdc;
 	
+	
+	private Tratamiento tratamientoActualizar;
 	/**
 	 * Create the frame.
 	 */
-	public ActualizarTratamiento(PrintWriter pw, ClientThreadCommands clientThreadCommands) {
-		this.pw = pw;
+	public ActualizarTratamiento(Tratamiento tratamiento, ClientDataChannel cdc, ClientThreadCommands clientThreadCommands) {
+		this.setCdc(cdc);
+		this.setTratamientoActualizar(tratamiento);
 		this.setClientThreadCommands(clientThreadCommands);
 		this.setDataPort(dataPort);
 		setBounds(100, 100, 483, 343);
@@ -59,13 +62,14 @@ public class ActualizarTratamiento extends JInternalFrame {
 		buttonAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				sendData();
+				dispose();
 			}
 		});
 		
 		JButton buttonCancelar = new JButton("Cancelar");
 		buttonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cancelAddTratamiento();
+				sendNull();
 				dispose();
 			}
 		});
@@ -78,14 +82,14 @@ public class ActualizarTratamiento extends JInternalFrame {
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
-						.addComponent(labelTratamiento, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 443, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(buttonCancelar, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 287, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 301, Short.MAX_VALUE)
 							.addComponent(buttonAnadir))
-						.addComponent(labelDescripcion))
+						.addComponent(labelDescripcion, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+						.addComponent(labelTratamiento, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -96,7 +100,7 @@ public class ActualizarTratamiento extends JInternalFrame {
 					.addGap(18)
 					.addComponent(labelDescripcion)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(buttonCancelar)
@@ -107,6 +111,9 @@ public class ActualizarTratamiento extends JInternalFrame {
 		textAreaDescripcion = new JTextArea();
 		scrollPane.setViewportView(textAreaDescripcion);
 		getContentPane().setLayout(groupLayout);
+		
+		
+		textAreaDescripcion.setText(tratamientoActualizar.getDescripcion());
 	}
 	
 	//Methods
@@ -122,40 +129,36 @@ public class ActualizarTratamiento extends JInternalFrame {
 	
 	private void sendData() {
 		
-		Tratamiento tratamiento = new Tratamiento();
-		ClientDataChannel cdc;
-		
 		if(checkData()) {
 			
-			tratamiento.setDescripcion(textAreaDescripcion.getText());
+			tratamientoActualizar.setDescripcion(textAreaDescripcion.getText());
 			
 			try {
-				this.pw.println("ADDTRATAMIENTO");
-				this.pw.flush();
-				cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
-				cdc.setOos(new ObjectOutputStream(cdc.getSocket().getOutputStream()));
-				cdc.getOos().writeObject(tratamiento);
+				cdc.getOos().writeObject(tratamientoActualizar);
 				cdc.getOos().flush();
-				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
 			}
 			catch(Exception t) {
-			
+					
 			}
 			
-			textAreaDescripcion.setText(null);
 		}
 		
 		return;
 	}
 	
-	private void cancelAddTratamiento() {
+
+	private void sendNull() {
+
 		try {
-			this.pw.println("EXIT ADD TRATAMIENTO");
-			pw.flush();
+
+			cdc.getOos().writeObject(null);
+			cdc.getOos().flush();
 		}
 		catch(Exception t) {
 		
 		}
+
+		return;
 	}
 	
 	private Boolean checkData() {
@@ -198,5 +201,21 @@ public class ActualizarTratamiento extends JInternalFrame {
 
 	public void setClientThreadCommands(ClientThreadCommands clientThreadCommands) {
 		this.clientThreadCommands = clientThreadCommands;
+	}
+
+	public Tratamiento getTratamientoActualizar() {
+		return tratamientoActualizar;
+	}
+
+	public void setTratamientoActualizar(Tratamiento tratamientoActualizar) {
+		this.tratamientoActualizar = tratamientoActualizar;
+	}
+
+	public ClientDataChannel getCdc() {
+		return cdc;
+	}
+
+	public void setCdc(ClientDataChannel cdc) {
+		this.cdc = cdc;
 	}
 }

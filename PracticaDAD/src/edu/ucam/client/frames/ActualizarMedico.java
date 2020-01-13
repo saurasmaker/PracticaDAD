@@ -78,12 +78,14 @@ public class ActualizarMedico extends JInternalFrame {
 		btnNewButtonAnadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				sendData();
+				dispose();
 			}
 		});
 		
 		JButton btnNewButtonCancelar = new JButton("Cancelar");
 		btnNewButtonCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				sendNull();
 				dispose();
 			}
 		});
@@ -164,15 +166,28 @@ public class ActualizarMedico extends JInternalFrame {
 			catch(Exception t) {
 					
 			}
-									
-			textFieldNombre.setText(null);
-			textFieldApellidos.setText(null);
 			
 		}
 		
 		return;
 	}
 	
+	
+	private void sendNull() {
+
+		try {
+
+			cdc.getOos().writeObject(null);
+			cdc.getOos().flush();
+		}
+		catch(Exception t) {
+		
+		}
+
+	
+	
+	return;
+}
 	
 	private Boolean checkData() {
 		if(textFieldNombre.getText() == null) {

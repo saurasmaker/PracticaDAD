@@ -118,15 +118,15 @@ public class AnadirPaciente extends JInternalFrame {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblDia)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinnerDia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(spinnerDia, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
 							.addComponent(lblMes)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+							.addGap(35)
 							.addComponent(lblAnio)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -146,11 +146,11 @@ public class AnadirPaciente extends JInternalFrame {
 					.addComponent(lblFechaNacimiento)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblDia)
 						.addComponent(spinnerDia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(spinnerMes, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblMes)
+						.addComponent(spinnerAnio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblAnio))
 					.addPreferredGap(ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
@@ -236,7 +236,7 @@ public class AnadirPaciente extends JInternalFrame {
 			JOptionPane.showMessageDialog(null,"You must complete password field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
-		else if((Integer.parseInt(spinnerDia.getValue().toString()) <= 0 || Integer.parseInt(spinnerDia.getValue().toString()) >= 31 ) || (Integer.parseInt(spinnerMes.getValue().toString()) <= 0 || Integer.parseInt(spinnerMes.getValue().toString()) >= 12) || (Integer.parseInt(spinnerAnio.getValue().toString()) <= 0)) {
+		else if((Integer.parseInt(spinnerDia.getValue().toString()) <= 0 || Integer.parseInt(spinnerDia.getValue().toString()) > 31 ) || (Integer.parseInt(spinnerMes.getValue().toString()) <= 0 || Integer.parseInt(spinnerMes.getValue().toString()) > 12) || (Integer.parseInt(spinnerAnio.getValue().toString()) <= 0)) {
 			JOptionPane.showMessageDialog(null,"You must complete date field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}

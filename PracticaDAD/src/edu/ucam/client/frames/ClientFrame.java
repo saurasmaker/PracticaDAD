@@ -18,6 +18,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -67,7 +69,7 @@ public class ClientFrame extends JFrame {
 		
 		setTitle("Client");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 779, 515);
+		setBounds(100, 100, 503, 665);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -464,14 +466,14 @@ public class ClientFrame extends JFrame {
 		mnTratamientos.add(mntmAnadirTratamiento);
 		
 		JMenuItem mntmActualizarTratamiento = new JMenuItem("Actualizar");
-		menuActualizarMedico.addActionListener(new ActionListener() {
+		mntmActualizarTratamiento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
 				//Envio comando
 				pw.println("UPDATETRATAMIENTO");
 				pw.flush();
 				
 				//Lectura Id
-				String idMedico = JOptionPane.showInputDialog("Introduce el id del trtamiento a ACTUALIZAR: ");
+				String idTratamiento = JOptionPane.showInputDialog("Introduce el id del tratamiento a ACTUALIZAR: ");
 				
 				//Envio Id
 				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
@@ -481,7 +483,7 @@ public class ClientFrame extends JFrame {
 					e.printStackTrace();
 				}
 				try {
-					cdc.getOos().writeObject(idMedico);
+					cdc.getOos().writeObject(idTratamiento);
 					cdc.getOos().flush();
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -741,7 +743,7 @@ public class ClientFrame extends JFrame {
 		if(paciente != null)
 			editorPaneData.setText(editorPaneData.getText() + " >Paciente: " + paciente.getId() + "\n\t-Nombre: "+paciente.getNombre()
 			+ "\n\t-Apellidos: "+paciente.getApellidos()
-			+ "\n\t-Fecha nacimiento: "+paciente.getFechaNacimiento() + "\n\n");
+			+ "\n\t-Fecha nacimiento: " + new SimpleDateFormat("dd/MM/yyyy").format(paciente.getFechaNacimiento()) + "\n\n");
 		
 		else
 			editorPaneData.setText(" >Paciente no encontrado.");
