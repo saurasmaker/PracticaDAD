@@ -14,12 +14,12 @@ public class RemoveMedico implements Comando{
 		try 
 		{
 			Singleton.removeMedico(brData.readLine(), medicos);
-			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.println("OK " + cont + " 0 Médico eliminado " + address + " " + port);
 			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "No autorizado.");
 			pwCommands.flush();
 		}
 	}

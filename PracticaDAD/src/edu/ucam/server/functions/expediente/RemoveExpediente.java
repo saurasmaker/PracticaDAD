@@ -14,12 +14,12 @@ public class RemoveExpediente implements Comando{
 		try 
 		{
 			Singleton.removeExpediente(brData.readLine(), expedientes);
-			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.println("OK " + cont + " 0 " + "Expediente eliminado" + address + " " + port );
 			pwCommands.flush();
 		} 
 		catch (Exception t) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + t.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "No autorizado.");
 			pwCommands.flush();
 		}	
 	}

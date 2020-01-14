@@ -21,12 +21,12 @@ public class AnadirPaciente2Expediente implements Comando{
 			
 			expediente.setPaciente(paciente);
 			
-			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.println("OK " + cont + " 0 Paciente añadido " + address + " " + port);
 			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "Mensaje error.");
 			pwCommands.flush();
 		}	
 	}

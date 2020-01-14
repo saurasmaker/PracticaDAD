@@ -14,12 +14,12 @@ public class RemoveTratamiento implements Comando{
 		try 
 		{
 			Singleton.removeTratamiento(brData.readLine(), tratamientos);
-			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.println("OK " + cont + " 0 Tratamiento eliminado " + address + " " + port);
 			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "No autorizado.");
 			pwCommands.flush();
 		}
 	}

@@ -54,6 +54,7 @@ public class ServerThreadCommands extends Thread{
 	private BufferedReader br;
 	private PrintWriter pw;
 	
+	private String name;
 	private Integer cont = 0;
 	private String message;
 	
@@ -144,15 +145,15 @@ public class ServerThreadCommands extends Thread{
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
 				
-				String text = "";
+				this.name = "";
 				
-				if("admin".equals(text = sdc.getBr().readLine())) {
-					pw.println("OK " + cont + " 200 " + text + " Envíe contraseña.");
+				if("admin".equals(this.name = sdc.getBr().readLine())) {
+					pw.println("OK " + cont + " 0 Envíe contraseña.");
 					pw.flush();
 					setUsered(true);
 				}
 				else {
-					pw.println("Failed " + cont + " 400" + " Not User.");
+					pw.println("FAILED " + cont + " -1" + " Not User.");
 					pw.flush();
 				}
 				
@@ -172,14 +173,13 @@ public class ServerThreadCommands extends Thread{
 				ServerDataChannel sdc = new ServerDataChannel(dataPort);
 				sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
 				
-				String text = "";
-				if("admin".equals(text = sdc.getBr().readLine())) {
-					pw.println("OK " + cont + " 200" + " Welcome " + text + ".");
+				if(usered && "admin".equals(sdc.getBr().readLine())) {
+					pw.println("OK " + cont + " 0" + " Welcome " + this.name + ".");
 					pw.flush();
 					loged = true;
 				}
 				else {
-					pw.println("Failed " + cont + " 400 " + text + " Prueba de nuevo.");
+					pw.println("FAILED " + cont + " -1 Prueba de nuevo.");
 					pw.flush();
 				}
 				
@@ -692,8 +692,9 @@ public class ServerThreadCommands extends Thread{
 			break;
 			
 		case "EXIT"://///////////////////////
+			pw.println("OK " + cont + " 0 Bye.");
+			pw.flush();
 			this.setSuspended(true);
-			System.out.println("suspended");
 			break;
 			
 		default://///////////////////////

@@ -17,12 +17,12 @@ public class AddPaciente implements Comando{
 			paciente.setId(GeneratePacienteId.run(pacientes));
 			System.out.println("Id Generada: " + paciente.getId());
 			Singleton.addPaciente(paciente, pacientes);
-			pwCommands.println("OK " + cont + " 200 " + port + " " + address);
+			pwCommands.println("OK " + cont + " 0 " + address + " " + port);
 			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "Mensaje error");
 			pwCommands.flush();
 		}
 	}

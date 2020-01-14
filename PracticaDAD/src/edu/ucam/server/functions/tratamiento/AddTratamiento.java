@@ -17,12 +17,12 @@ public class AddTratamiento implements Comando{
 			tratamiento.setId(GenerateTratamientoId.run(tratamientos));
 			System.out.println("Id generada: " + tratamiento.getId());
 			Singleton.addTratamiento(tratamiento, tratamientos);
-			pwCommands.println("OK " + cont + " 200 " + port + " " + address);
+			pwCommands.println("OK " + cont + " 0 " + address + " " + port);
 			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "Mensaje error");
 			pwCommands.flush();
 		}
 	}

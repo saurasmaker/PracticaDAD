@@ -21,12 +21,12 @@ public class EliminarPacienteFromExpediente implements Comando{
 			paciente = null;
 			expediente.setPaciente(paciente);
 			
-			pwCommands.println("OK " + cont + " 200 " + address + " " + port);
+			pwCommands.println("OK " + cont + " 0 Paciente eliminado " + address + " " + port);
 			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("OK " + cont + " 0 Paciente añadido " + address + " " + port);
 			pwCommands.flush();
 		}	
 	}

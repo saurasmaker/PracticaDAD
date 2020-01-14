@@ -22,12 +22,12 @@ public class UpdateMedico implements Comando{
 			
 			Singleton.updateMedico(medico, medicos);
 			
-			pwCommands.println("OK " + cont + " 200 " + port + " " + address);
+			pwCommands.println("OK " + cont + " 0 " + address + " " + port);
 			pwCommands.flush();
 		} 
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "Mensaje error");
 			pwCommands.flush();
 		}
 	}	

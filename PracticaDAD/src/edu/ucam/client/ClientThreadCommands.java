@@ -59,6 +59,13 @@ public class ClientThreadCommands extends Thread{
 			
 			//Cuerpo
 			readMessage();
+			if(!loged) {
+				if(!usered)
+					checkLoged();
+				
+				else
+					checkPass();
+			}
 			
 			if(message!=null) {
 				if(clientFrame == null)
@@ -67,6 +74,7 @@ public class ClientThreadCommands extends Thread{
 					clientFrame.getEditorPaneLog().setText(clientFrame.getEditorPaneLog().getText()+ "From Server: " + message + " " + cont + "\n");
 				}
 			}
+
 			++cont;
 		}
 		
@@ -80,50 +88,51 @@ public class ClientThreadCommands extends Thread{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		
-		checkLoged();
-		
+
 		return;
 	}
 	
 	
 	public void checkLoged() {
 			
-		if(!usered & !loged) {
-			try {
-				if(this.message.split(" ")[0].equals("OK")) {
-					usered = true;
-					return;
-				}
+		try {
+			if(this.message.split(" ")[0].equals("OK")) {
+				usered = true;
+				return;
+			}
 			
-				else {
-					JOptionPane.showMessageDialog(null, "Usuario incorrecta.");
-				}
+			else {
+				JOptionPane.showMessageDialog(null, "Usuario incorrecto.");
+				readMessage();
+				return;
 			}
-			catch(Exception t) {
+		}
+		catch(Exception t) {
 				
+		}
+	}
+	
+		
+	public void checkPass() {
+			
+
+		try {
+			if(this.message.split(" ")[0].equals("OK")) {
+				loged = true;
+				clientLogin.dispose();
+				openClientFrame();
+				return;
 			}
+
+			else  {
+				JOptionPane.showMessageDialog(null, "Contraseña incorrecta.");
+				usered = false;
+			}
+		}
+		catch(Exception t) {
+				
 		}
 		
-		else if(!loged) {
-			try {
-				if(this.message.split(" ")[0].equals("OK")) {
-					loged = true;
-					clientLogin.dispose();
-					openClientFrame();
-					return;
-				}
-
-				else  {
-					JOptionPane.showMessageDialog(null, "Contraseña incorrecta.");
-					usered = false;
-				}
-			}
-			catch(Exception t) {
-				
-			}
-		}
-	
 		return;
 	}
 	

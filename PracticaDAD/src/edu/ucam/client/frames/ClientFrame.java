@@ -6,11 +6,13 @@ import javax.swing.border.EmptyBorder;
 
 import edu.ucam.client.ClientDataChannel;
 import edu.ucam.client.ClientThreadCommands;
+import edu.ucam.extra_classes.ComponentResizer;
 import edu.ucam.pojos.Expediente;
 import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
 
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -29,14 +31,22 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JDesktopPane;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.beans.PropertyVetoException;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JEditorPane;
 import javax.swing.ScrollPaneConstants;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.MouseInfo;
+import java.awt.Point;
 
 public class ClientFrame extends JFrame {
 
@@ -54,17 +64,19 @@ public class ClientFrame extends JFrame {
 	private JEditorPane editorPaneLog;
 
 	private Integer dataPort;
-	
+	private Integer xMouse, yMouse;
 	//Constructor
 	public ClientFrame(PrintWriter pw, ClientThreadCommands clientThreadCommands, Integer dataPort) {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				pw.println("EXIT");
-				pw.flush();
-				clientThreadCommands.setSuspended(true);
-			}
-		});
+		
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+       /* addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                close();
+            }
+        });*/
+        
+		this.setLocationRelativeTo(null);
 		this.dataPort = dataPort;
 		this.setClientThreadCommands(clientThreadCommands);
 		this.setPw(pw);
@@ -72,12 +84,175 @@ public class ClientFrame extends JFrame {
 		setTitle("Client");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 503, 665);
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		setUndecorated(true);
+		ComponentResizer cr = new ComponentResizer();
+		cr.registerComponent(this);
+		cr.setMinimumSize(this.getSize());
+        cr.setSnapSize(new Dimension(10, 10));
 		
 		JDesktopPane desktopPane = new JDesktopPane();
 		desktopPane.setBackground(Color.GRAY);
+		
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setDividerSize(3);
+		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		
+		JPanel panel_1 = new JPanel();
+		
+		JPanel panelHeader = new JPanel();
+		panelHeader.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+					Point point = MouseInfo.getPointerInfo().getLocation();
+					setLocation(point.x - xMouse, point.y - yMouse);
+			}
+		});
+		panelHeader.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xMouse = e.getX();
+	            yMouse = e.getY();  
+
+			}
+		});
+		
+		JLabel labelIcon = new JLabel("  Icon");
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		
+		JLabel labelMinimize = new JLabel("_");
+		labelMinimize.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1)
+					setExtendedState(JFrame.ICONIFIED);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelMinimize.setBorder(BorderFactory.createRaisedBevelBorder());
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelMinimize.setBorder(null);
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				labelMinimize.setBorder(BorderFactory.createLoweredBevelBorder());
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				labelMinimize.setBorder(null);
+			}
+		});
+		labelMinimize.setHorizontalAlignment(SwingConstants.CENTER);
+		labelMinimize.setForeground(Color.BLACK);
+		labelMinimize.setBounds(40, 0, 25, 25);
+		panel_3.add(labelMinimize);
+		
+		JLabel labelMaximize = new JLabel("\u25A2");
+		labelMaximize.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1){
+					if(getExtendedState() == JFrame.MAXIMIZED_BOTH)
+						setExtendedState(JFrame.NORMAL);
+					else
+						setExtendedState(JFrame.MAXIMIZED_BOTH);
+				}
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelMaximize.setBorder(BorderFactory.createRaisedBevelBorder());
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelMaximize.setBorder(null);
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				labelMaximize.setBorder(BorderFactory.createLoweredBevelBorder());
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				labelMaximize.setBorder(null);
+			}
+		});
+		labelMaximize.setHorizontalAlignment(SwingConstants.CENTER);
+		labelMaximize.setForeground(Color.BLACK);
+		labelMaximize.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelMaximize.setBounds(65, 0, 25, 25);
+		panel_3.add(labelMaximize);
+		
+		JLabel labelClose = new JLabel("X");
+		labelClose.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				close();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelClose.setBorder(BorderFactory.createRaisedBevelBorder());
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelClose.setBorder(null);
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				labelClose.setBorder(BorderFactory.createLoweredBevelBorder());
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				labelClose.setBorder(null);
+			}
+		});
+		labelClose.setHorizontalAlignment(SwingConstants.CENTER);
+		labelClose.setForeground(Color.BLACK);
+		labelClose.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelClose.setBounds(90, 0, 25, 25);
+		panel_3.add(labelClose);
+		GroupLayout gl_panelHeader = new GroupLayout(panelHeader);
+		gl_panelHeader.setHorizontalGroup(
+			gl_panelHeader.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 245, Short.MAX_VALUE)
+				.addGroup(gl_panelHeader.createSequentialGroup()
+					.addComponent(labelIcon, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 571, Short.MAX_VALUE)
+					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_panelHeader.setVerticalGroup(
+			gl_panelHeader.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 26, Short.MAX_VALUE)
+				.addGroup(gl_panelHeader.createSequentialGroup()
+					.addGroup(gl_panelHeader.createParallelGroup(Alignment.LEADING)
+						.addComponent(labelIcon, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		panelHeader.setLayout(gl_panelHeader);
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(panel_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
+				.addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
+				.addComponent(panelHeader, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(panelHeader, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+					.addGap(1)
+					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
+		);
+		
+		JMenuBar menuBar = new JMenuBar();
 		
 		JMenu mnPacientes = new JMenu("Pacientes");
 		menuBar.add(mnPacientes);
@@ -921,23 +1096,18 @@ public class ClientFrame extends JFrame {
 			}
 		});
 		mnExpedientesTratamientos.add(mntmEliminarTratamientoExpediente);
-		
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setDividerSize(3);
-		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
+		gl_panel_1.setHorizontalGroup(
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
+				.addComponent(menuBar, GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
 		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(splitPane, GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+		gl_panel_1.setVerticalGroup(
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addComponent(menuBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
+		panel_1.setLayout(gl_panel_1);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		splitPane.setRightComponent(tabbedPane);
@@ -982,7 +1152,7 @@ public class ClientFrame extends JFrame {
 		
 		
 		splitPane.setLeftComponent(desktopPane);
-		splitPane.setDividerLocation(300);
+		splitPane.setDividerLocation(350);
 		contentPane.setLayout(gl_contentPane);
 	}
 
@@ -1077,6 +1247,22 @@ public class ClientFrame extends JFrame {
 		return;
 	}
 	
+	private void close(){
+        if (JOptionPane.showConfirmDialog(rootPane, "¿Desea realmente salir del sistema?", "Salir del sistema", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        	
+        	try {
+        		pw.println("EXIT");
+        		pw.flush();
+        		clientThreadCommands.setSuspended(true);
+        		dispose();
+        	}
+        	catch(Exception t) {
+        	}
+
+        }
+        
+        return;
+    }  
 	
 	//Getters & Setters
 	public PrintWriter getPw() {

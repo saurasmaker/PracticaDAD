@@ -13,12 +13,12 @@ public class CountPacientes implements Comando{
 		try {
 			oosData.writeObject("\n >PACIENTES \n   +Cantidad: " + pacientes.size());
 			oosData.flush();
-			pwCommands.println("\n OK " + cont + " 200 " + port + " " + address);
+			pwCommands.println("OK " + cont + " 0 " + pacientes.size() + " " + address + " " + port);
 			pwCommands.flush();	
 		}
 		catch (Exception e) 
 		{
-			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
+			pwCommands.println("FAILED " + cont + " -1 " + "Mensaje error");
 			pwCommands.flush();
 		}
 	}
