@@ -876,26 +876,28 @@ public class ClientFrame extends JFrame {
 	
 	void mostrarExpediente(Expediente expediente) {
 		
-		String mensaje = null;
-		int i = 0;
+		String mensaje = "";		
 		
 		if(expediente != null) {
-			mensaje += editorPaneData.getText() + " >Expediente: " + expediente.getId() 
-			+ "\n\t-Paciente: "+ expediente.getPaciente().getNombre() + " " + expediente.getPaciente().getApellidos() 
-			+ "\n\t-Medico: "+ expediente.getMedico().getNombre() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad()
-			+ "\n\t-Tratamiento: "+ expediente.getTramientos() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad();
-			for (Tratamiento t : expediente.getTramientos()) {
-				i++;
-				mensaje += "\n\t-Tratamiento " + i + ":"  + t.getDescripcion();
+			mensaje += editorPaneData.getText() + " >Expediente: " + expediente.getId() + "\n"
+			+ "\n\t-Paciente: "+ expediente.getPaciente().getNombre() + " " + expediente.getPaciente().getApellidos() + "\n"
+			+ "\n\t-Medico: "+ expediente.getMedico().getNombre() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad() + "\n"
+			+ "\n\t-Tratamientos: ";
+			
+			for (int i = 0; i < expediente.getTramientos().size()-1; ++i) {
+				mensaje += "\n\t\t-Tratamiento " + i + ":"  + expediente.getTramientos().get(i+1).getDescripcion();
 			}
-			mensaje += "\n\t-Observaciones: "+ expediente.getObservaciones() + "\n\n";
+			
+			mensaje += "\n\n\t-Observaciones: "+ expediente.getObservaciones() + "\n\n";
+			
 			editorPaneData.setText(mensaje);
-	}
-		else
+		}
+		else 
 			editorPaneData.setText(" >Expediente no encontrado.");
-		
+				
 		return;
 	}
+	
 	
 	//Getters & Setters
 	public PrintWriter getPw() {

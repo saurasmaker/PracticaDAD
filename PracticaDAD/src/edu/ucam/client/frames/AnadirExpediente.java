@@ -10,15 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.TextArea;
 
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import edu.ucam.client.ClientDataChannel;
 import edu.ucam.client.ClientThreadCommands;
-import edu.ucam.pojos.Expediente;
-import edu.ucam.pojos.Paciente;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -27,11 +24,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.awt.event.ActionEvent;
-import javax.swing.JSpinner;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -95,7 +88,8 @@ public class AnadirExpediente extends JInternalFrame {
 			}
 		});
 		
-		listTratamientos = new JList();
+		listTratamientos = new JList<String>();
+		listTratamientos.setModel(new DefaultListModel<String>());
 		
 		textFieldTratamiento = new JTextField();
 		textFieldTratamiento.setColumns(10);
@@ -107,10 +101,9 @@ public class AnadirExpediente extends JInternalFrame {
 		JButton btnNewButtonAñadirTratamiento = new JButton("+");
 		btnNewButtonAñadirTratamiento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				if(textFieldTratamiento.getText() != "") {
-					
-					((DefaultListModel<String>)listTratamientos.getModel()).addElement(textFieldTratamiento.getText());
+				DefaultListModel<String> model = (DefaultListModel<String>)listTratamientos.getModel();
+				if("".compareTo(textFieldTratamiento.getText()) != 0) {
+					model.addElement(textFieldTratamiento.getText());
 				}
 			}
 		});
@@ -210,7 +203,7 @@ public class AnadirExpediente extends JInternalFrame {
 					cdc.getOos().writeObject(textFieldMedico.getText());
 					cdc.getOos().flush();
 					for (int i = 0; i < model.getSize(); ++i) 				
-						tratamientos += model.get(i);
+						tratamientos += ";" + model.get(i);
 					cdc.getOos().writeObject(tratamientos);
 					cdc.getOos().flush();
 					cdc.getOos().writeObject(textAreaObservaciones.getText());
@@ -244,21 +237,19 @@ public class AnadirExpediente extends JInternalFrame {
 	private Boolean checkData() {
 		
 		if(textFieldPaciente.getText().equals("")) {
-			JOptionPane.showMessageDialog(null,"You must complete user name field.","Field error", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null,"You must complete user Id Paciente field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		else if(textFieldMedico.getText().equals("")) {
-			JOptionPane.showMessageDialog(null,"You must complete password field.","Field error", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null,"You must complete Id Medico field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		else if(textAreaObservaciones.getText().equals("")) {
-			JOptionPane.showMessageDialog(null,"You must complete password field.","Field error", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null,"You must complete Observaciones field.","Field error", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
-		else if(listTratamientos.getModel().getSize() > 0) {
-			JOptionPane.showMessageDialog(null,"You must complete password field.","Field error", JOptionPane.WARNING_MESSAGE);
-			return false;
-		}	
+
+			
 		return true;
 	}
 		

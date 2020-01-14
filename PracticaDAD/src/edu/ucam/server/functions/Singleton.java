@@ -6,6 +6,7 @@ import edu.ucam.pojos.Expediente;
 import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
+import edu.ucam.server.functions.expediente.GenerateExpedienteId;
 
 public class Singleton {
 	
@@ -67,6 +68,7 @@ public class Singleton {
 		for(String s: idsTratamientos) 
 			expediente.addTramiento(Singleton.getTratamiento(s, tratamientos));
 		expediente.setObservaciones(observaciones);
+		expediente.setId(GenerateExpedienteId.run(expedientes));
 		
 		expedientes.add(expediente);
 		

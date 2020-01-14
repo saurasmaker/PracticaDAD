@@ -17,6 +17,9 @@ import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
 import edu.ucam.server.functions.expediente.AddExpediente;
+import edu.ucam.server.functions.expediente.GetExpediente;
+import edu.ucam.server.functions.expediente.ListExpedientes;
+import edu.ucam.server.functions.expediente.RemoveExpediente;
 import edu.ucam.server.functions.medico.AddMedico;
 import edu.ucam.server.functions.medico.CountMedicos;
 import edu.ucam.server.functions.medico.GetMedico;
@@ -297,7 +300,7 @@ public class ServerThreadCommands extends Thread{
 				try {
 					ServerDataChannel sdc = new ServerDataChannel(dataPort);
 					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
-					AddExpediente.run(pacientes, medicos, tratamientos,expedientes, cont, socket.getPort(), address, pw, sdc.getOis());
+					AddExpediente.run(pacientes, medicos, tratamientos, expedientes, cont, socket.getPort(), address, pw, sdc.getOis());
 				}
 				catch (IOException e) {
 					 e.printStackTrace();
@@ -312,15 +315,58 @@ public class ServerThreadCommands extends Thread{
 							
 		case "GETEXPEDIENTE"://///////////////////////
 			
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+					GetExpediente.run(expedientes, cont, address, socket.getPort(), pw, sdc.getOos(), sdc.getBr());
+				}
+				catch(IOException t) {
+					
+				}
+			}
+			
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			
 			break;
 			
 		case "REMOVEEXPEDIENTE"://///////////////////////
 			
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					RemoveExpediente.run(expedientes, cont, address, socket.getPort(), pw, sdc.getBr());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			
 			break;
 		
 		case "LISTEXPEDIENTES"://///////////////////////
+			if(loged) {
+				ServerDataChannel sdc = new ServerDataChannel(dataPort);
+				try {
+					sdc.setOos(new ObjectOutputStream(sdc.getSocket().getOutputStream()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				ListExpedientes.run(expedientes, cont, address, socket.getPort(), pw, sdc.getOos());
+			}
+			
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			
 			break;
 			
