@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 
 import edu.ucam.client.ClientDataChannel;
 import edu.ucam.client.ClientThreadCommands;
+import edu.ucam.pojos.Expediente;
 import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
@@ -635,15 +636,112 @@ public class ClientFrame extends JFrame {
 		menuBar.add(mnExpedientes);
 		
 		JMenuItem mntmAnadirExpediente = new JMenuItem("A\u00F1adir");
+		mntmAnadirExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AnadirExpediente anadirExpediente = new AnadirExpediente(pw, clientThreadCommands); 
+				desktopPane.add(anadirExpediente);
+				try {
+					anadirExpediente.setMaximum(true);
+				} catch (PropertyVetoException e) {
+					e.printStackTrace();
+				}
+				anadirExpediente.show();
+			}
+		});
 		mnExpedientes.add(mntmAnadirExpediente);
 		
+		
 		JMenuItem mntmMostrarExpediente = new JMenuItem("Mostrar");
+		mntmMostrarExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("GETEXPEDIENTE");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del expediente a mostrar: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+
+				//Lectura objeto
+				Expediente expediente = null;
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					expediente = (Expediente)cdc.getOis().readObject();
+					editorPaneData.setText("");
+					mostrarExpediente(expediente);
+				}catch(Exception t) {
+					
+				}	
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientes.add(mntmMostrarExpediente);
 		
 		JMenuItem mntmEliminarExpediente = new JMenuItem("Eliminar");
+		mntmEliminarExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("REMOVEEXPEDIENTE");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del expediente a ELIMINAR: ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientes.add(mntmEliminarExpediente);
 		
 		JMenuItem mntmListarExpedientes = new JMenuItem("Listar");
+		mntmListarExpedientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				//Envio comando
+				pw.println("LISTEXPEDIENTES");
+				pw.flush();
+				
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setOis(new ObjectInputStream(cdc.getSocket().getInputStream()));
+					ObjectInputStream ois = cdc.getOis();
+					Integer tam = 0;
+					try {
+						
+						tam = (Integer)ois.readObject();
+						editorPaneData.setText("");
+						for(int i = 0;i < tam;++i)
+							mostrarExpediente((Expediente)ois.readObject());
+						
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientes.add(mntmListarExpedientes);
 		
 		JMenu mnExpedientesPacientes = new JMenu("Pacientes");
@@ -772,6 +870,29 @@ public class ClientFrame extends JFrame {
 		
 		else
 			editorPaneData.setText(" >Tratamiento no encontrado.");
+		
+		return;
+	}
+	
+	void mostrarExpediente(Expediente expediente) {
+		
+		String mensaje = null;
+		int i = 0;
+		
+		if(expediente != null) {
+			mensaje += editorPaneData.getText() + " >Expediente: " + expediente.getId() 
+			+ "\n\t-Paciente: "+ expediente.getPaciente().getNombre() + " " + expediente.getPaciente().getApellidos() 
+			+ "\n\t-Medico: "+ expediente.getMedico().getNombre() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad()
+			+ "\n\t-Tratamiento: "+ expediente.getTramientos() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad();
+			for (Tratamiento t : expediente.getTramientos()) {
+				i++;
+				mensaje += "\n\t-Tratamiento " + i + ":"  + t.getDescripcion();
+			}
+			mensaje += "\n\t-Observaciones: "+ expediente.getObservaciones() + "\n\n";
+			editorPaneData.setText(mensaje);
+	}
+		else
+			editorPaneData.setText(" >Expediente no encontrado.");
 		
 		return;
 	}
