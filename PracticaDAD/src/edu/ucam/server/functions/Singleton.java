@@ -1,6 +1,7 @@
 package edu.ucam.server.functions;
 
 import java.util.ArrayList;
+
 import edu.ucam.pojos.Expediente;
 import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
@@ -57,13 +58,15 @@ public class Singleton {
 	
 	
 	/**************Funciones Expediente***********************************************************************************************/
-	public static void addExpediente(String idPaciente, String idMedico, String[] idsTratamientos, ArrayList<Paciente> pacientes, ArrayList<Medico> medicos, ArrayList<Tratamiento> tratamientos, ArrayList<Expediente> expedientes){
+	public static void addExpediente(String idPaciente, String idMedico, String[] idsTratamientos, String observaciones, ArrayList<Paciente> pacientes, ArrayList<Medico> medicos, ArrayList<Tratamiento> tratamientos, ArrayList<Expediente> expedientes){
 		
 		Expediente expediente = new Expediente();
 		
 		expediente.setMedico(Singleton.getMedico(idMedico, medicos));
 		expediente.setPaciente(Singleton.getPaciente(idPaciente, pacientes));
-		expediente.setTramientos(null);
+		for(String s: idsTratamientos) 
+			expediente.addTramiento(Singleton.getTratamiento(s, tratamientos));
+		expediente.setObservaciones(observaciones);
 		
 		expedientes.add(expediente);
 		

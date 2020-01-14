@@ -16,6 +16,7 @@ import edu.ucam.pojos.Expediente;
 import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
+import edu.ucam.server.functions.expediente.AddExpediente;
 import edu.ucam.server.functions.medico.AddMedico;
 import edu.ucam.server.functions.medico.CountMedicos;
 import edu.ucam.server.functions.medico.GetMedico;
@@ -292,10 +293,23 @@ public class ServerThreadCommands extends Thread{
 			
 		case "ADDEXPEDIENTE"://///////////////////////
 			
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setOis(new ObjectInputStream(sdc.getSocket().getInputStream()));
+					AddExpediente.run(pacientes, medicos, tratamientos,expedientes, cont, socket.getPort(), address, pw, sdc.getOis());
+				}
+				catch (IOException e) {
+					 e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
 			
-				
+			++dataPort;
+			
 			break;
-			
+							
 		case "GETEXPEDIENTE"://///////////////////////
 			
 			
