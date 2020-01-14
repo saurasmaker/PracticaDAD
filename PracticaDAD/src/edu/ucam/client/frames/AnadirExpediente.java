@@ -28,6 +28,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 public class AnadirExpediente extends JInternalFrame {
 	
@@ -89,6 +91,7 @@ public class AnadirExpediente extends JInternalFrame {
 		});
 		
 		listTratamientos = new JList<String>();
+		listTratamientos.setBorder(new LineBorder(Color.GRAY));
 		listTratamientos.setModel(new DefaultListModel<String>());
 		
 		textFieldTratamiento = new JTextField();
@@ -107,32 +110,36 @@ public class AnadirExpediente extends JInternalFrame {
 				}
 			}
 		});
+		
+		JLabel lblNewLabel = new JLabel("Tratamientos: ");
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewAnadirExpediente, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+						.addComponent(lblNewAnadirExpediente, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(btnNewButtonCancelar)
-							.addPreferredGap(ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 325, Short.MAX_VALUE)
 							.addComponent(btnNewAnadir))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblMedico, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-								.addComponent(lblPaciente, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-								.addComponent(textFieldPaciente, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-								.addComponent(lblTratamientos, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-								.addComponent(textFieldMedico, 325, 325, Short.MAX_VALUE)
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-								.addComponent(lblNewLabelObservaciones, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-								.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-									.addComponent(textFieldTratamiento, GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(lblMedico, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+								.addComponent(lblPaciente, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+								.addComponent(textFieldPaciente, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+								.addComponent(lblTratamientos, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+								.addComponent(textFieldMedico, 325, 329, Short.MAX_VALUE)
+								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+								.addComponent(lblNewLabelObservaciones, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(textFieldTratamiento, GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(btnNewButtonAñadirTratamiento)))
 							.addGap(18)
-							.addComponent(listTratamientos, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(listTratamientos, GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))))
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -141,10 +148,12 @@ public class AnadirExpediente extends JInternalFrame {
 					.addContainerGap()
 					.addComponent(lblNewAnadirExpediente)
 					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblPaciente)
+						.addComponent(lblNewLabel))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblPaciente)
-							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(textFieldPaciente, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(lblMedico)
@@ -159,8 +168,8 @@ public class AnadirExpediente extends JInternalFrame {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(lblNewLabelObservaciones)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE))
-						.addComponent(listTratamientos, GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))
+						.addComponent(listTratamientos, GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButtonCancelar)

@@ -51,7 +51,8 @@ public class ClientFrame extends JFrame {
 	private ClientThreadCommands clientThreadCommands;
 	
 	private JEditorPane editorPaneData;
-	
+	private JEditorPane editorPaneLog;
+
 	private Integer dataPort;
 	
 	//Constructor
@@ -576,7 +577,7 @@ public class ClientFrame extends JFrame {
 		mnTratamientos.add(mntmEliminarTratamiento);
 		
 		JMenuItem mntmListarTratamientos = new JMenuItem("Listar");
-		mntmListarPacientes.addActionListener(new ActionListener() {
+		mntmListarTratamientos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
 				//Envio comando
 				pw.println("LISTTRATAMIENTOS");
@@ -748,28 +749,179 @@ public class ClientFrame extends JFrame {
 		mnExpedientes.add(mnExpedientesPacientes);
 		
 		JMenuItem mntmAnadirPacienteExpediente = new JMenuItem("A\u00F1adir");
+		mntmAnadirPacienteExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("ADDPACIENTE2EXP");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del Expediente a AÑADIR el paciente: ");
+				String idPaciente = JOptionPane.showInputDialog("Introduce el id del Paciente a AÑADIR al expediente " + idExpediente +  ": ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+				cdc.getPw().println(idPaciente);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientesPacientes.add(mntmAnadirPacienteExpediente);
 		
 		JMenuItem mntmEliminarPacienteExpediente = new JMenuItem("Eliminar");
+		mntmEliminarPacienteExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("REMOVEPACIENTEFROMEXP");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del Expediente a ELIMINAR el paciente: ");
+				String idPaciente = JOptionPane.showInputDialog("Introduce el id del Paciente a ELIMINAR del expediente " + idExpediente +  ": ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+				cdc.getPw().println(idPaciente);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientesPacientes.add(mntmEliminarPacienteExpediente);
 		
 		JMenu mnExpedientesMedicos = new JMenu("M\u00E9dicos");
 		mnExpedientes.add(mnExpedientesMedicos);
 		
 		JMenuItem mntmAnadirMedicoExpediente = new JMenuItem("A\u00F1adir");
+		mntmAnadirMedicoExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("ADDMEDICO2EXP");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del Expediente a AÑADIR el paciente: ");
+				String idMedico = JOptionPane.showInputDialog("Introduce el id del Medico a AÑADIR al expediente " + idExpediente +  ": ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+				cdc.getPw().println(idMedico);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientesMedicos.add(mntmAnadirMedicoExpediente);
 		
 		JMenuItem mntmEliminarMedicoExpediente = new JMenuItem("Eliminar");
+		mntmEliminarMedicoExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("REMOVEMEDICOFROMEXP");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del Expediente a ELIMINAR el medico: ");
+				String idMedico = JOptionPane.showInputDialog("Introduce el id del Medico a ELIMINAR del expediente " + idExpediente +  ": ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+				cdc.getPw().println(idMedico);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientesMedicos.add(mntmEliminarMedicoExpediente);
 		
 		JMenu mnExpedientesTratamientos = new JMenu("Tratamientos");
 		mnExpedientes.add(mnExpedientesTratamientos);
 		
 		JMenuItem mntmAnadirTratamientoExpediente = new JMenuItem("A\u00F1adir");
+		mntmAnadirTratamientoExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("ADDTRATAM2EXP");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del Expediente a AÑADIR el Tratamiento: ");
+				String idTratamiento = JOptionPane.showInputDialog("Introduce el id del Tratmiento a AÑADIR al Expediente " + idExpediente +  ": ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+				cdc.getPw().println(idTratamiento);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientesTratamientos.add(mntmAnadirTratamientoExpediente);
 		
 		JMenuItem mntmEliminarTratamientoExpediente = new JMenuItem("Eliminar");
+		mntmEliminarTratamientoExpediente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Envio comando
+				pw.println("REMOVETRATAMFROMEXP");
+				pw.flush();
+				
+				//Lectura Id
+				String idExpediente = JOptionPane.showInputDialog("Introduce el id del Expediente a ELIMINAR el tratamiento: ");
+				String idTratamiento = JOptionPane.showInputDialog("Introduce el id del Tratamiento a ELIMINAR del expediente " + idExpediente +  ": ");
+				
+				//Envio Id
+				ClientDataChannel cdc = new ClientDataChannel(clientThreadCommands.getDataPort());
+				try {
+					cdc.setPw(new PrintWriter(new OutputStreamWriter(cdc.getSocket().getOutputStream())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				cdc.getPw().println(idExpediente);
+				cdc.getPw().flush();
+				cdc.getPw().println(idTratamiento);
+				cdc.getPw().flush();
+				
+				clientThreadCommands.setDataPort(clientThreadCommands.getDataPort()+1);
+			}
+		});
 		mnExpedientesTratamientos.add(mntmEliminarTratamientoExpediente);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -824,7 +976,7 @@ public class ClientFrame extends JFrame {
 				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
 		);
 		
-		JEditorPane editorPaneLog = new JEditorPane();
+		editorPaneLog = new JEditorPane();
 		scrollPane.setViewportView(editorPaneLog);
 		panel.setLayout(gl_panel);
 		
@@ -879,16 +1031,43 @@ public class ClientFrame extends JFrame {
 		String mensaje = "";		
 		
 		if(expediente != null) {
-			mensaje += editorPaneData.getText() + " >Expediente: " + expediente.getId() + "\n"
-			+ "\n\t-Paciente: "+ expediente.getPaciente().getNombre() + " " + expediente.getPaciente().getApellidos() + "\n"
-			+ "\n\t-Medico: "+ expediente.getMedico().getNombre() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad() + "\n"
-			+ "\n\t-Tratamientos: ";
+			
+			try {
+				mensaje += editorPaneData.getText() + " >Expediente: " + expediente.getId() + "\n";
+			}
+			catch(Exception t) {
+				
+			}
+			try {
+				mensaje += "\n\t-Paciente: " + expediente.getPaciente().getNombre() + " " + expediente.getPaciente().getApellidos() + "\n";
+			}
+			catch(Exception t) {
+				mensaje += "\n\t-Paciente: NULL\n";
+			}
+			try {
+				mensaje += "\n\t-Medico: "+ expediente.getMedico().getNombre() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad() + "\n";
+			}
+			catch(Exception t) {
+				mensaje += "\n\t-Medico: NULL\n";
+			}
+
+			mensaje += "\n\t-Tratamientos: ";
 			
 			for (int i = 0; i < expediente.getTramientos().size()-1; ++i) {
-				mensaje += "\n\t\t-Tratamiento " + i + ":"  + expediente.getTramientos().get(i+1).getDescripcion();
+				try {
+					mensaje += "\n\t\t-Tratamiento " + i + ":"  + expediente.getTramientos().get(i+1).getDescripcion();
+				}
+				catch(Exception t) {
+					mensaje += "\n\t\t-Tratamiento " + i + ": NULL";
+				}
 			}
 			
-			mensaje += "\n\n\t-Observaciones: "+ expediente.getObservaciones() + "\n\n";
+			try {
+				mensaje += "\n\n\t-Observaciones: "+ expediente.getObservaciones() + "\n\n";
+			}
+			catch(Exception t) {
+				mensaje += "\n\t-Observaciones: NULL\n\n";
+			}
 			
 			editorPaneData.setText(mensaje);
 		}
@@ -926,5 +1105,22 @@ public class ClientFrame extends JFrame {
 
 	public void setDataPort(Integer dataPort) {
 		this.dataPort = dataPort;
+	}
+	public JEditorPane getEditorPaneData() {
+		return editorPaneData;
+	}
+
+
+	public void setEditorPaneData(JEditorPane editorPaneData) {
+		this.editorPaneData = editorPaneData;
+	}
+
+
+	public JEditorPane getEditorPaneLog() {
+		return editorPaneLog;
+	}
+
+	public void setEditorPaneLog(JEditorPane editorPaneLog) {
+		this.editorPaneLog = editorPaneLog;
 	}
 }

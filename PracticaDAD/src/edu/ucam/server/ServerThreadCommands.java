@@ -17,6 +17,12 @@ import edu.ucam.pojos.Medico;
 import edu.ucam.pojos.Paciente;
 import edu.ucam.pojos.Tratamiento;
 import edu.ucam.server.functions.expediente.AddExpediente;
+import edu.ucam.server.functions.expediente.AnadirMedico2Expediente;
+import edu.ucam.server.functions.expediente.AnadirPaciente2Expediente;
+import edu.ucam.server.functions.expediente.AnadirTratamiento2Expediente;
+import edu.ucam.server.functions.expediente.EliminarMedicoFromExpediente;
+import edu.ucam.server.functions.expediente.EliminarPacienteFromExpediente;
+import edu.ucam.server.functions.expediente.EliminarTratamientoFromExpediente;
 import edu.ucam.server.functions.expediente.GetExpediente;
 import edu.ucam.server.functions.expediente.ListExpedientes;
 import edu.ucam.server.functions.expediente.RemoveExpediente;
@@ -371,21 +377,105 @@ public class ServerThreadCommands extends Thread{
 			break;
 			
 		case "ADDPACIENTE2EXP"://///////////////////////
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					AnadirPaciente2Expediente.run(expedientes, pacientes, cont, address, socket.getPort(), pw, sdc.getBr());
+				}	
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			break;
 			
 		case "REMOVEPACIENTEFROMEXP"://///////////////////////
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					EliminarPacienteFromExpediente.run(expedientes, pacientes, cont, address, socket.getPort(), pw, sdc.getBr());
+				}	
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			break;
 			
 		case "ADDMEDICO2EXP"://///////////////////////
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					AnadirMedico2Expediente.run(expedientes, medicos, cont, address, socket.getPort(), pw, sdc.getBr());
+				}	
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			break;
 			
 		case "REMOVEMEDICOFROMEXP"://///////////////////////
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					EliminarMedicoFromExpediente.run(expedientes, medicos, cont, address, socket.getPort(), pw, sdc.getBr());
+				}	
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			break;
 			
 		case "ADDTRATAM2EXP"://///////////////////////
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					AnadirTratamiento2Expediente.run(expedientes, tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
+				}	
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			break;
 			
 		case "REMOVETRATAMFROMEXP"://///////////////////////
+			if(loged) {
+				try {
+					ServerDataChannel sdc = new ServerDataChannel(dataPort);
+					sdc.setBr(new BufferedReader(new InputStreamReader(sdc.getSocket().getInputStream())));
+					EliminarTratamientoFromExpediente.run(expedientes, tratamientos, cont, address, socket.getPort(), pw, sdc.getBr());
+				}	
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else 
+				this.userNotLoged();
+			
+			++dataPort;
 			break;
 			
 		case "ADDMEDICO"://///////////////////////

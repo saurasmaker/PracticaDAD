@@ -14,6 +14,7 @@ public class ClientThreadCommands extends Thread{
 	
 	//Atributes
 	private ClientLogin clientLogin;
+	private ClientFrame clientFrame = null;
 	private BufferedReader br;
 	private PrintWriter pw;
 	private Boolean suspended = false, paused = false, loged = false, usered = false;
@@ -59,9 +60,13 @@ public class ClientThreadCommands extends Thread{
 			//Cuerpo
 			readMessage();
 			
-			if(message!=null)
-				System.out.println("From Server: " + message + " " + cont);
-			
+			if(message!=null) {
+				if(clientFrame == null)
+					System.out.println("From Server: " + message + " " + cont);
+				else {
+					clientFrame.getEditorPaneLog().setText(clientFrame.getEditorPaneLog().getText()+ "From Server: " + message + " " + cont + "\n");
+				}
+			}
 			++cont;
 		}
 		
@@ -123,11 +128,11 @@ public class ClientThreadCommands extends Thread{
 	}
 	
 	public void openClientFrame() {
-		ClientFrame frame = new ClientFrame(pw, this, dataPort);
+		this.clientFrame = new ClientFrame(pw, this, dataPort);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frame.setVisible(true);
+					clientFrame.setVisible(true);
 				} catch (Exception e) {
 							e.printStackTrace();
 				}
@@ -236,6 +241,16 @@ public class ClientThreadCommands extends Thread{
 
 	public Boolean getPaused() {
 		return paused;
+	}
+
+
+	public ClientFrame getClientFrame() {
+		return clientFrame;
+	}
+
+
+	public void setClientFrame(ClientFrame clientFrame) {
+		this.clientFrame = clientFrame;
 	}
 	
 	

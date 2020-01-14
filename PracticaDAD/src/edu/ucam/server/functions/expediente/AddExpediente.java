@@ -33,16 +33,16 @@ public class AddExpediente implements Comando{
 		
 		String[] idsTratamiendosSplited = idsTratamientos.split(";");
 		
-		//try 
+		try 
 		{
 			Singleton.addExpediente(idPaciente, idMedico, idsTratamiendosSplited, observaciones, pacientes, medicos, tratamientos, expedientes);
 			pwCommands.println("OK " + cont + " 200 " + port + " " + address);
 			pwCommands.flush();
 		} 
-		/*catch (Exception e) 
+		catch (Exception e) 
 		{
 			pwCommands.println("FAILED " + cont + " codrespuesta " + e.getMessage());
 			pwCommands.flush();
-		}*/
+		}
 	}
 }

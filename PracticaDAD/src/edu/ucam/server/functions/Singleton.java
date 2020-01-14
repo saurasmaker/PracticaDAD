@@ -65,8 +65,11 @@ public class Singleton {
 		
 		expediente.setMedico(Singleton.getMedico(idMedico, medicos));
 		expediente.setPaciente(Singleton.getPaciente(idPaciente, pacientes));
-		for(String s: idsTratamientos) 
-			expediente.addTramiento(Singleton.getTratamiento(s, tratamientos));
+		for(String s: idsTratamientos) {
+			Tratamiento tr = Singleton.getTratamiento(s, tratamientos);
+			if(tr!=null)
+				expediente.addTramiento(tr);
+		}
 		expediente.setObservaciones(observaciones);
 		expediente.setId(GenerateExpedienteId.run(expedientes));
 		

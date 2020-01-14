@@ -298,16 +298,6 @@ public class ClientLogin extends JFrame {
 		
 		return true;
 	}
-	
-	/*void openRegisterFrame() {
-		
-		this.setVisible(false);
-		
-		registerUser = new RegisterUser(this.output, this.threadClientCommands, this);
-		registerUser.setVisible(true);
-		
-		return;
-	}*/
 
 	
 	//Getters & Setters

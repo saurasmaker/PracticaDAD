@@ -10,6 +10,7 @@ import edu.ucam.server.functions.Comando;
 public class ListTratamientos implements Comando{
 	public static void run(ArrayList<Tratamiento> tratamientos, int cont, String address, int port, PrintWriter pwCommands, ObjectOutputStream oosData) 
 	{		
+		
 		try {
 			oosData.writeObject(tratamientos.size());
 			oosData.flush();	
