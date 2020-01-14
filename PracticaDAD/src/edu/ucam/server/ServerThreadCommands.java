@@ -81,6 +81,9 @@ public class ServerThreadCommands extends Thread{
 	//Methods
 	public void run() {
 		
+		pw.println(this.getDataPort());
+		pw.flush();
+		
 		while(!isPaused()) {
 			
 			//Control del bucle********************/
@@ -700,6 +703,48 @@ public class ServerThreadCommands extends Thread{
 	public void setUsered(Boolean usered) {
 		this.usered = usered;
 	}
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public String getMessage() {
+		return message;
+	}
+
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+
+	public Integer getDataPort() {
+		return dataPort;
+	}
+
+
+	public void setDataPort(Integer dataPort) {
+		this.dataPort = dataPort;
+	}
+
+
+	public Boolean getSuspended() {
+		return suspended;
+	}
+
+
+	public Boolean getPaused() {
+		return paused;
+	}
+	
+	
 	
 		
 }

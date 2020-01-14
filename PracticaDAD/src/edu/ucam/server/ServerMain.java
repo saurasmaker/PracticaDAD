@@ -35,13 +35,14 @@ public class ServerMain {
 		while(true) {
 			try {
 				serverThreads.add(new ServerThreadCommands(numThreads, serverSocket.accept(), expedientes, pacientes, medicos, tratamientos));
-				serverThreads.get(numThreads).run();
-				System.out.println(" >Nueva conexión establecida.");
+				serverThreads.get(numThreads).setDataPort(2021 + (numThreads*50));
+				serverThreads.get(numThreads).start();
 				++numThreads;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+
 	
 }

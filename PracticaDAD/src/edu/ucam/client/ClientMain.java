@@ -18,7 +18,6 @@ public class ClientMain{
 		Socket socket;
 		BufferedReader br = null;
 		PrintWriter pw = null; 
-		Integer dataPort = 2021;
 		/****************************/
 		
 		//Establecemos conexion***************************************************************/
@@ -29,12 +28,11 @@ public class ClientMain{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}/*************************************************************************************/
-		
-		
+	
 		
 		//Ejecutamos ventana de Login****************************/
 		ClientLogin login = new ClientLogin(pw, clientThreadCommands);
-		clientThreadCommands = new ClientThreadCommands(login, br, pw, dataPort);
+		clientThreadCommands = new ClientThreadCommands(login, br, pw);
 		login.setClientThreadCommands(clientThreadCommands);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

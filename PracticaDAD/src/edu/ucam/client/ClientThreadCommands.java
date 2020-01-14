@@ -22,11 +22,17 @@ public class ClientThreadCommands extends Thread{
 	private Integer cont = 0;
 	
 	//Constructors
-	public ClientThreadCommands(ClientLogin clientLogin, BufferedReader br, PrintWriter pw, Integer dataPort) {
-		this.dataPort = dataPort;
+	public ClientThreadCommands(ClientLogin clientLogin, BufferedReader br, PrintWriter pw) {
+		
 		this.pw = pw;
 		this.br = br;
 		this.clientLogin = clientLogin;
+		try {
+			this.dataPort = Integer.parseInt(br.readLine());
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	
