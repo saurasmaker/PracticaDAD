@@ -114,7 +114,10 @@ public class ServerThreadCommands extends Thread{
 			
 			
 			//Cuerpo
+			ServerChronometer sc = new ServerChronometer(pw);
+			sc.start();
 			readCommand();
+			sc.setSuspended(true);
 
 		}
 		
@@ -695,6 +698,9 @@ public class ServerThreadCommands extends Thread{
 			pw.println("OK " + cont + " 0 Bye.");
 			pw.flush();
 			this.setSuspended(true);
+			break;
+			
+		case "IMHERE":
 			break;
 			
 		default://///////////////////////

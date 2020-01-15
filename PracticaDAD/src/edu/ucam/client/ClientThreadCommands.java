@@ -68,12 +68,10 @@ public class ClientThreadCommands extends Thread{
 			}
 			
 			if(message!=null) {
-				if(clientFrame == null)
-					System.out.println("From Server: " + message + " " + cont);
-				else {
+				System.out.println("From Server: " + message + " " + cont);
+				if(clientFrame!=null)
 					clientFrame.getEditorPaneLog().setText(clientFrame.getEditorPaneLog().getText()+ "From Server: " + message + " " + cont + "\n");
-				}
-			}
+			}			
 
 			++cont;
 		}
@@ -89,6 +87,11 @@ public class ClientThreadCommands extends Thread{
 			e1.printStackTrace();
 		}
 
+		if(this.getMessage().compareTo("AFK")==0) {
+			ClientChronometer cc = new ClientChronometer(this, clientFrame, clientLogin);
+			cc.start();
+		}
+		
 		return;
 	}
 	
