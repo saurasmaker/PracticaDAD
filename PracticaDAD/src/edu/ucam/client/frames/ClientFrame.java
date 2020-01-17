@@ -71,7 +71,7 @@ public class ClientFrame extends JFrame {
 	        });
 		
 		setLocationRelativeTo(null);
-		dataPort = dataPort;
+		this.dataPort = dataPort;
 		setClientThreadCommands(clientThreadCommands);
 		setPw(pw);
 		
@@ -1068,7 +1068,7 @@ public class ClientFrame extends JFrame {
 				mensaje += "\n\t-Paciente: NULL\n";
 			}
 			try {
-				mensaje += "\n\t-Medico: "+ expediente.getMedico().getNombre() + "\n\t   Especialidad: " + expediente.getMedico().getEspecialidad() + "\n";
+				mensaje += "\n\t-Medico: "+ expediente.getMedico().getNombre() + " " + expediente.getMedico().getApellidos() + "\n\t  *Especialidad: " + expediente.getMedico().getEspecialidad() + "\n";
 			}
 			catch(Exception t) {
 				mensaje += "\n\t-Medico: NULL\n";
@@ -1076,12 +1076,12 @@ public class ClientFrame extends JFrame {
 
 			mensaje += "\n\t-Tratamientos: ";
 			
-			for (int i = 0; i < expediente.getTramientos().size()-1; ++i) {
+			for (int i = 0; i < expediente.getTramientos().size(); ++i) {
 				try {
-					mensaje += "\n\t\t-Tratamiento " + i + ":"  + expediente.getTramientos().get(i+1).getDescripcion();
+					mensaje += "\n\t\t-Tratamiento " + (i+1) + ": "  + expediente.getTramientos().get(i).getDescripcion();
 				}
 				catch(Exception t) {
-					mensaje += "\n\t\t-Tratamiento " + i + ": NULL";
+					mensaje += "\n\t\t-Tratamiento " + (i+1) + " : NULL";
 				}
 			}
 			

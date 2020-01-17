@@ -75,11 +75,8 @@ public class ServerThreadCommands extends Thread{
 		this.tratamientos = tratamientos;
 		this.setExpedientes(expedientes);
 		this.setSocket(socket);
-		System.out.println("SOCKET establecido.");
 		this.setID(ID);
-		System.out.println("Thread_ID: " + this.ID);
 		this.setBridges();
-		System.out.println("Puentes creados");
 		
 		try {
 			this.address = InetAddress.getLocalHost().toString();
@@ -104,7 +101,6 @@ public class ServerThreadCommands extends Thread{
 						wait();
 					
 					if(this.isSuspended()) {
-						System.out.println(" >Conexión cerrada.");
 						return;
 					}
 				}
@@ -127,8 +123,8 @@ public class ServerThreadCommands extends Thread{
 		
 		try {
 			message = this.getBr().readLine();
-			System.out.println("Comando recibido: " + message);
 			this.checkCommand(message);
+			
 			++cont;
 		} catch (IOException e) {
 			e.printStackTrace();
