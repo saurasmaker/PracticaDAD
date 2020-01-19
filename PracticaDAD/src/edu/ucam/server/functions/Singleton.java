@@ -405,8 +405,6 @@ public class Singleton {
 		return;
 	}
 	
-	//new Server_Thread(ID, socket, expedientes, pacientes, medicos, ArrayList<Tratamiento> tratamientos)
-	
 	
 	public static Expediente getExpediente(String idExpediente, ArrayList<Expediente> expedientes){
 		
