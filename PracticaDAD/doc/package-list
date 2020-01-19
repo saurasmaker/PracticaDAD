@@ -1,0 +1,8 @@
+edu.ucam.client
+edu.ucam.client.frames
+edu.ucam.server
+edu.ucam.server.functions
+edu.ucam.server.functions.expediente
+edu.ucam.server.functions.medico
+edu.ucam.server.functions.paciente
+edu.ucam.server.functions.tratamiento
