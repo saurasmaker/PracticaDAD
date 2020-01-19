@@ -298,12 +298,30 @@ public class Singleton {
             	
             	pwp = new PrintWriter(fp);
             	
-            	pwp.println(e.getPaciente().getId());
-            	pwp.flush();
-            	pwp.println(e.getMedico().getId());
-            	pwp.flush();
-            	pwp.println(e.getObservaciones());
-            	pwp.flush();
+            	try {
+            		pwp.println(e.getPaciente().getId());
+            		pwp.flush();
+            	}
+            	catch(Exception t) {
+            		pwp.println("null");
+            		pwp.flush();
+            	}
+            	try {
+            		pwp.println(e.getMedico().getId());
+            		pwp.flush();
+            	}
+            	catch(Exception t) {
+            		pwp.println("null");
+            		pwp.flush();
+            	}
+            	try {
+            		pwp.println(e.getObservaciones());
+            		pwp.flush();
+            	}
+            	catch(Exception t) {
+            		pwp.println("null");
+            		pwp.flush();
+            	}
             	
             	for(Tratamiento t: e.getTramientos()) {
             		pwp.println(t.getId());
@@ -314,9 +332,9 @@ public class Singleton {
             	try {
                	   if (null != fp)
                		   fp.close();
-                  } catch (Exception e2) {
+                } catch (Exception e2) {
                   	e2.printStackTrace();
-                  }
+                }
             }
             	
         } catch (Exception e) {
