@@ -429,42 +429,6 @@ public class Singleton {
 		return;
 		
 	}
-	
-	//public static void listExpedientes() {return;}
-	
-	public static void addPaciente2Expediente(String idPaciente, String idExpediente, ArrayList<Paciente> pacientes, ArrayList<Expediente> expedientes) {
-		
-		
-		return;
-	}
-	
-	public static void removePacienteFromExpediente(String idPaciente, String idExpediente, ArrayList<Expediente> expedientes) {
-		
-		return;
-	}
-	
-	public static void addMedico2Expediente(String idMedico, String idExpediente, ArrayList<Medico> medicos, ArrayList<Expediente> expedientes) {
-		
-		
-		return;
-	}
-	
-	public static void removeMedicoFromExpediente(String idMedico, String idExpediente, ArrayList<Expediente> expedientes) {
-		
-		return;
-	}
-	
-	public static void addTratamiento2Expediente(String idPaciente, String idExpediente, ArrayList<Paciente> pacientes, ArrayList<Expediente> expedientes) {
-		
-		
-		return;
-	}
-	
-	public static void removeTratamientoFromExpediente(String idPaciente, String idExpediente, ArrayList<Expediente> expedientes) {
-		
-		return;
-	}
-	
 	/***************************************/
 	
 	
